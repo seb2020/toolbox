@@ -1,0 +1,69 @@
+#!/bin/sh
+# Sync and import errata for spacewalk
+# 02.01.2017
+#
+# vi /etc/cron.daily/spacewalk_sync.cron
+
+MAILTO=root
+
+# try to create the lock and check the outcome
+LOCKFILE=/var/run/spacewalk_sync.lock
+#lockfile -r 0 ${LOCKFILE} 1>/dev/null 2>&1
+#status=$?
+#if [ ${status} -ne 0 ] ;then
+if [ -e "$LOCKFILE" ]; then
+        echo "Another instance already running. Aborting."
+        exit 1
+else
+        touch "$LOCKFILE"
+fi
+trap "rm ${LOCKFILE}" EXIT
+
+#sync channels and publish updates
+/usr/bin/spacewalk-repo-sync --channel centos-7-2-1511-base-x86_64 \
+                             --type yum -c centos-7-2-1511-base-x86_64 >/dev/null
+
+/usr/bin/spacewalk-repo-sync --channel centos-7-2-1511-updates-x86_64 \
+                             --type yum -c centos-7-2-1511-updates-x86_64 >/dev/null
+
+/usr/bin/spacewalk-repo-sync --channel centos-7-2-1511-epel-x86_64 \
+                             --type yum -c centos-7-2-1511-epel-x86_64 >/dev/null
+
+/usr/bin/spacewalk-repo-sync --channel centos-7-2-1511-docker-x86_64 \
+                             --type yum -c centos-7-2-1511-docker-x86_64 >/dev/null
+
+/usr/bin/spacewalk-repo-sync --channel centos-7-3-1611-base-x86_64 \
+                             --type yum -c centos-7-3-1611-base-x86_64 >/dev/null
+
+/usr/bin/spacewalk-repo-sync --channel centos-7-3-1611-updates-x86_64 \
+                             --type yum -c centos-7-3-1611-updates-x86_64 >/dev/null
+
+/usr/bin/spacewalk-repo-sync --channel centos-7-3-1611-epel-x86_64 \
+                             --type yum -c centos-7-3-1611-epel-x86_64 >/dev/null
+
+/usr/bin/spacewalk-repo-sync --channel centos-7-3-1611-docker-x86_64 \
+                             --type yum -c centos-7-3-1611-docker-x86_64 >/dev/null
+
+#get errata file and checksums
+cd /tmp
+wget -N http://cefs.steve-meier.de/errata.latest.xml 1>/dev/null 2>&1
+wget -N http://cefs.steve-meier.de/errata.latest.md5 1>/dev/null 2>&1
+wget -N http://www.redhat.com/security/data/oval/com.redhat.rhsa-all.xml.bz2 1>/dev/null 2>&1
+bunzip2 -f /tmp/com.redhat.rhsa-all.xml.bz2
+
+#verify integrity
+grep "errata.latest.xml$" errata.latest.md5 > myerrata.md5
+md5sum -c myerrata.md5 1>/dev/null 2>&1
+if [ "$?" == 0 ]; then
+        #ok - import errata
+        /data/spacewalk/errata/centos/errata-import.pl --server localhost --errata errata.latest.xml --include-channels=centos-7-2-1511-base-x86_64,centos-7-2-1511-updates-x86_64,centos-7-2-1511-epel-x86_64,centos-7-3-1611-base-x86_64,centos-7-3-1611-updates-x86_64,centos-7-3-1611-epel-x86_64 --rhsa-oval=/tmp/com.redhat.rhsa-all.xml --publish 1>/dev/null
+        if [ "$?" != 0 ]; then
+                echo "It seems like there was a problem while publishing the most recent errata..."
+                exit 1
+        fi
+        rm /tmp/myerrata.md5
+else
+        #errata information possibly invalid
+        echo "ERROR: md5 checksum mismatch, check download!"
+        exit 1
+fi
