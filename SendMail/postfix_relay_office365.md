@@ -6,11 +6,9 @@
 
 relayhost = [smtp.office365.com]:587
  
-# Configuration interfaces
 inet_interfaces = all
 inet_protocols = ipv4
  
-# Configuration SMTP
 smtp_sasl_auth_enable = yes
 smtp_sasl_security_options = noanonymous
 smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
