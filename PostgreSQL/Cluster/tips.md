@@ -27,19 +27,19 @@ standby1 |
 [root@SRVDB-01 ~]# mkdir /data/backup
 [root@SRVDB-01 ~]# chown postgres:postgres /data/backup/
 [root@SRVDB-01 ~]# logout
-[postgres@SRVDB-01:][LOGIVALSIERRESITE1] pg_basebackup -D /data/backup/ --xlog --format=t WARNING: skipping special file "./pg_log" WARNING: skipping special file "./postgresql.conf" WARNING: skipping special file "./pg_hba.conf"
-[postgres@SRVDB-01:] [LOGIVALSIERRESITE1] ls -la /data/backup/
+[postgres@SRVDB-01:][SITE1] pg_basebackup -D /data/backup/ --xlog --format=t WARNING: skipping special file "./pg_log" WARNING: skipping special file "./postgresql.conf" WARNING: skipping special file "./pg_hba.conf"
+[postgres@SRVDB-01:] [SITE1] ls -la /data/backup/
 total 38876
 drwxr-xr-x. 2 postgres postgres 4096 Apr 4 11:42 .
 drwxr-xr-x. 7 root root 4096 Apr 4 11:42 ..
 -rw-r--r--. 1 postgres postgres 39797760 Apr 4 11:42 base.tar
-[postgres@SRVDB-01: [LOGIVALSIERRESITE1]
+[postgres@SRVDB-01: [SITE1]
 ```
 
 ## Transferring the base backup to the standby server
 
 ```bash
-[postgres@SRVDB-01:] [LOGIVALSIERRESITE1] scp /data/backup/base.tar SRVDB-02:/data/pgdata/LOGIVALSIERRESITE2/
+[postgres@SRVDB-01:] [SITE1] scp /data/backup/base.tar SRVDB-02:/data/pgdata/SITE2/
 postgres@SRVDB-02's password:
 base.tar 100% 38MB 38.0MB/s 00:00
 ```
