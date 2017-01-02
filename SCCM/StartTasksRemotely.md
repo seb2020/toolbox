@@ -1,9 +1,9 @@
 # Start a SCCM tasks remotely
 
 ```
-$WMIPath = "\\" + $CompName + "\root\ccm:SMS_Client" 
-$SMSwmi = [wmiclass] $WMIPath 
- [Void]$SMSwmi.TriggerSchedule($strAction)
+$WMIPath = "\\" + $CompName + "\root\ccm:SMS_Client"
+$SMSwmi = [wmiclass] $WMIPath
+    [Void]$SMSwmi.TriggerSchedule($strAction)
 ```
 
 * Supported actions for $strAction are:
