@@ -1,4 +1,4 @@
-# SQL : 
+# SQL
 select  all SMS_R_SYSTEM.ItemKey,SMS_R_SYSTEM.DiscArchKey,SMS_R_SYSTEM.Name0,SMS_R_SYSTEM.SMS_Unique_Identifier0,SMS_R_SYSTEM.Resource_Domain_OR_Workgr0,SMS_R_SYSTEM.Client0 from vSMS_R_System AS sms_r_system INNER JOIN fn_ListUpdateComplianceStatus(0) AS SMS_UpdateComplianceStatus ON SMS_UpdateComplianceStatus.MachineID = sms_r_system.ItemKey   where SMS_UpdateComplianceStatus.LastEnforcementMessageID = 9
 
 # WQL

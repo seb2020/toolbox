@@ -1,3 +1,11 @@
+# ..######.
+# .##....##
+# .##......
+# ..######.
+# .......##
+# .##....##
+# ..######.
+
 <#
 	.DESCRIPTION
         The purpose of this script is to remove expired or superceded updates from all software update nodes in SCCM 2012.

@@ -12,7 +12,7 @@ SRVAD-01                      15:10:04                                          
 SRVFILE-01                    4.04:16:36                                             2048 Operating normally
 ```
 
-## Get Snapshot 
+## Get Snapshot
 
 ```powershell
 Get-VMSnapshot *

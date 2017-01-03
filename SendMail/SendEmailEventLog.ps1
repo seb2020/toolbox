@@ -1,7 +1,20 @@
-# This script send mail when a enventid is triggered
-# sgir / 02.01.2017
-#
-# Exemple with an eventid related to AD CS
+# ..######.
+# .##....##
+# .##......
+# ..######.
+# .......##
+# .##....##
+# ..######.
+
+<#
+.SYNOPSIS
+   This script send mail when a enventid is triggered by Tasks Scheduler
+.DESCRIPTION
+     Exemple with an eventid related to AD CS
+.NOTES
+    File Name      : SendEmailEventLog.ps1
+
+#>
 
 $event = get-eventlog -LogName Security -InstanceId 4887 -newest 1
 

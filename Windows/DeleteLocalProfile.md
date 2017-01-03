@@ -15,4 +15,3 @@ Check and clean if necessary the reg key
 ```Registry
 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\SID
 ```
-

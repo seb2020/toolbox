@@ -5,7 +5,6 @@
 Force sync
 
 ```bash
-
 zmprov gds galsync@domain.ch
 # name zimbra
 # type gal objectClass: zimbraDataSource
@@ -55,15 +54,16 @@ zmprov sa zimbraCOSId=ID DE LA COS|wc -lgac
 #### Supprimer les messages dans les queues
 
 A faire en root
+
 ```bash
 /opt/zimbra/postfix/sbin/postsuper -d ALL deferredgac
 ```
 
-##  Actions sur les boites mails ## 
+## Actions sur les boites mails
 
-### Réindexex les boites mails ###
+### Réindexex les boites mails
 
-####  Lancer le reindex sur toutes les boites d'un domaine ####
+#### Lancer le reindex sur toutes les boites d'un domain
 
 ```bash
 for i in `zmprov -l gaa domaine.ch`; do echo "rim $i start" >> /tmp/rim_start.txt; done
@@ -71,7 +71,7 @@ zmprov -f /tmp/rim_start.txt
 gac
 ```
 
-####  Voir le status de reindex #### 
+#### Voir le status de reindex
 
 ```bash
 for i in `zmprov -l gaa domaine.ch`; do echo "rim $i status">>   /tmp/rim_status.txt; done
@@ -79,7 +79,7 @@ zmprov -f /tmp/rim_status.txt
 gac
 ```
 
-#### Annuler le reindex #### 
+#### Annuler le reindex
 
 ```bash
 for i in `zmprov -l gaa domaine.ch`; do echo "rim $i cancel">>   /tmp/rim_cancel.txt; done
@@ -87,9 +87,9 @@ zmprov -f /tmp/rim_cancel.txt
 gac
 ```
 
-### Partage ###
+### Partage
 
-####  Donner les accès full au compte zpstmigration sur une mailbox d’un user
+#### Donner les accès full au compte zpstmigration sur une mailbox d’un user
 
 ```bash
 zmmailbox -z -m user@domaine.ch mfg / account zpstmigration@domaine.ch rwixd
@@ -110,7 +110,7 @@ zmmailbox -z -m info@domaine.ch mfg / account utilisateur@domaine.ch rwixd
 gac
 ```
 
-####  Donner permettre la delegation d’envoi d’email pour la mailbox info
+#### Donner permettre la delegation d’envoi d’email pour la mailbox info
 
 ```bash
 zmprov ma info@domaine.ch +zimbraPrefAllowAddressForDelegatedSender "info@domaine.ch"
@@ -124,9 +124,9 @@ zmmailbox -z -m utilisateur@domaine.ch grr account info@domaine.ch sendAs
 gac
 ```
 
-### Cool stuff ###
+### Cool stuff
 
-####  Increasing the Maximum Allowable Attachment Size
+#### Increasing the Maximum Allowable Attachment Size
 
 By default, this setting is low. Nowadays it’s acceptable to send attachments larger than 10MB (but not obscenely larger). I don’t like it and I discourage my users from sending large attachments via e-mail but if you feel the need to loosen up this restriction, here are the commands to do that:
 
@@ -142,7 +142,7 @@ zmmtactl restart
 gac
 ```
 
-####  Disabling the Spam Filter
+#### Disabling the Spam Filter
 
 Sometimes it might be desirable to disable spam filtering across an entire domain or COS. For example, if you pay a 3rd party service to do your spam filtering for you.
 
@@ -229,7 +229,7 @@ gac
 
 You can also add/remove RBLs from the administration console; you’ll find the option under Configure->Global Settings->MTA in the “DNS Checks” section. I haven’t found how how to remove a single RBL via the CLI without wiping out the whole list
 
-####  Archiving/exporting/importing a user’s inbox
+#### Archiving/exporting/importing a user’s inbox
 
 This is handy if you want to move a user from one server to another, or if you need to export and archive the mailbox of a user who no longer exists.
 
@@ -245,7 +245,7 @@ zmmailbox -s -m user@domain.tld postRestURL "//?fmt=tgz&resolve=reset" /tmp/user
 gac
 ```
 
-####  Working with grants
+#### Working with grants
 
 Retrieve grants for a user’s folder (Calendar, in this example):
 
@@ -279,7 +279,7 @@ Permissions are represented by the following letters: r, w, i, x, d, a
 
 So if you wanted to give all rights to user2@domain from the previous example, you’d replace the ‘r’ with ‘rwixda’.
 
-####  Working with mountpoints
+#### Working with mountpoints
 
 Mount “/Inbox/Shared Data” from user1@domain.tld’s account to “/Inbox/User1 Shared Data” on user2@domain.tld’s account:
 
@@ -315,7 +315,7 @@ gac
 
 This will enable the dumpster for the ‘default’ COS; disable purging; allow users to see the messages in their dumpster less than a day old; and keep messages in the dumpster for two years (730 days). This is just an example, of course but it should provide a good understanding as to how to use these options.
 
-####  Listing all user accounts for a domain
+#### Listing all user accounts for a domain
 
 ```bash
 zmprov -l gaa domain.com
@@ -337,14 +337,14 @@ zmcontrol restart
 gac
 ```
 
-####  Getting a list of all folders for an account
+#### Getting a list of all folders for an account
 
 ```bash
 zmmailbox -z -m user@domain.tld gaf
 gac
 ```
 
-####  Get a list of message IDs for the first 1000 messages in “/OLD Mail/Inbox” and save them to a file
+#### Get a list of message IDs for the first 1000 messages in “/OLD Mail/Inbox” and save them to a file
 
 ```bash
 zmmailbox -z -m user@domain.tld search -t message -l 1000 'in:"/Old Mail/Inbox"' | awk '{print $2}' | sed -e '1,4d' | tr '\n' ',' | sed -e 's/,,//g' > messageids.txt 
@@ -358,7 +358,7 @@ zmmailbox -z -m user@domain.tld mm `cat messageids.txt` "/To Be Deleted"
 gac
 ```
 
-####  Raise the number of items that Zimbra Desktop or the Zimbra Web Client will display per page
+#### Raise the number of items that Zimbra Desktop or the Zimbra Web Client will display per page
 
 ```bash
 zmprov ma user@domain.tld zimbraPrefMailItemsPerPage 500
@@ -374,14 +374,14 @@ gac
 
 *Note: Before you do this, take some time to examine whether it’s really necessary. Make sure the account doesn’t have a bunch of duplicate contacts.
 
-####  List all contacts for an account 
+#### List all contacts for an account
 
 ```bash
 zmmailbox -z -m user@domain.tld gact
 gac
 ```
 
-####  List all contacts for an account and save the IDs to a file
+#### List all contacts for an account and save the IDs to a file
 
 ```bash
 zmmailbox -z -m user@domain.tld gact | grep 'Id: [0-9].*$' | tr '\n' ',' | sed -e 's/Id: //g' -e 's/,$//g' > contactids.txt
@@ -395,7 +395,7 @@ zmmailbox -z -m user@domain.tld dct `cat contactids.txt`
 gac
 ```
 
-####  Route a user’s e-mail to another mail server
+#### Route a user’s e-mail to another mail server
 
 ```bash
 zmprov ma user@domain.tld zimbraMailTransport smtp:someothermailhost.domain.tld:25
