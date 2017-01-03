@@ -1,4 +1,20 @@
-# Script to get usname from SID
+# ..######.
+# .##....##
+# .##......
+# ..######.
+# .......##
+# .##....##
+# ..######.
+
+<#
+.SYNOPSIS
+    Find the username with SID
+.DESCRIPTION
+    SID of the user
+.NOTES
+    File Name      : GetUsernameFromSID.ps1
+
+#>
 
 param
 (

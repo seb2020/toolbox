@@ -1,4 +1,20 @@
-# Find disconnected RDP session on the current computer
+# ..######.
+# .##....##
+# .##......
+# ..######.
+# .......##
+# .##....##
+# ..######.
+
+<#
+.SYNOPSIS
+    Find disconnected session on local computer
+.DESCRIPTION
+    Find disconnected session on local computer
+.NOTES
+    File Name      : FindDisconnectedRDPSessions.ps1
+
+#>
 
 $ComputerName = $env:COMPUTERNAME
 $queryResults = (qwinsta /server:$ComputerName| foreach { (($_.trim() -replace "\s+",","))} | ConvertFrom-Csv)  
