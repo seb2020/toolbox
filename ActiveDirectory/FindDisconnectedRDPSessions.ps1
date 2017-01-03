@@ -13,7 +13,7 @@
     Find disconnected session on local computer
 .NOTES
     File Name      : FindDisconnectedRDPSessions.ps1
-
+    
 #>
 
 $ComputerName = $env:COMPUTERNAME
