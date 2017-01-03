@@ -1,6 +1,6 @@
 # Xen CLI
 
-## How to I startup and shutdown a VM?
+## Startup and shutdown a VM
 
 ```bash
 xe vm-start vm={vm name}
@@ -71,4 +71,3 @@ xe vm-snapshot new-name-label="Before update kernel" vm=UUID-vm
 xe snapshot-list
 xe snapshot-revert snapshot-uuid=UUID-snapshot
 ```
-
