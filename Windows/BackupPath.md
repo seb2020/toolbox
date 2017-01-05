@@ -7,3 +7,5 @@
   * XML : C:\Users\%username%\AppData\Roaming\FileZilla
 * Share-X
   * Folder : C:\Users\%username%\Documents\ShareX
+* VPN Windows
+  * File : %userprofile%\AppData\Roaming\Microsoft\Network\Connections\Pbk\rasphone.pbk
