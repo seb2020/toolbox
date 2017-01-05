@@ -9,3 +9,6 @@
   * Folder : C:\Users\%username%\Documents\ShareX
 * VPN Windows
   * File : %userprofile%\AppData\Roaming\Microsoft\Network\Connections\Pbk\rasphone.pbk
+* Outlook
+  * Folder signatures : C:\Users\%username%\AppData\Roaming\Microsoft\Signatures
+  * OST : C:\Users\%username%\AppData\Local\Microsoft\Outlook
