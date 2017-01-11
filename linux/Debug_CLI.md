@@ -28,4 +28,11 @@ dig (dig google.com @<ip of resolver>)
 whois
 traceroute
 curl
+iftop
+```
+
+### files
+
+```bash
+ftop
 ```
