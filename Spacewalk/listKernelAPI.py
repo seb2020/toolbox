@@ -37,12 +37,12 @@ list = webservice.system.list_systems(key)
 print("-- Kernel version -- Name -- Last boot --")
 for system in list:
 
-                lastboot = webservice.system.get_details(key,system.get('id'))
-                currKern = webservice.system.get_running_kernel(key,system.get('id'))
-                matchObj = re.search(".*\'last_boot\'\: \<DateTime \'(.*?)\'\ at.*", str(lastboot))
+    lastboot = webservice.system.get_details(key, system.get('id'))
+    currKern = webservice.system.get_running_kernel(key, system.get('id'))
+    matchObj = re.search(
+        ".*\'last_boot\'\: \<DateTime \'(.*?)\'\ at.*", str(lastboot))
 
-                print(currKern,system.get('name'),matchObj.group(1))
+    print(currKern, system.get('name'), matchObj.group(1))
 
 
 webservice.auth.logout(key)
-
