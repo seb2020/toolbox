@@ -22,11 +22,11 @@ from datetime import timedelta
 import re
 
 
-SATELLITE_URL = "http://SRVLNXMGNT-01.logival.local/rpc/api"
+SATELLITE_URL = "http://SPACEWALK/rpc/api"
 
 webservice = client.Server(SATELLITE_URL, verbose=0)
 
-key = webservice.auth.login("admin", "ktnTp4oOgzTmdcfOoe5v")
+key = webservice.auth.login("admin", "XXXX")
 
 
 today = date.today()
