@@ -34,7 +34,7 @@ yesterday = today - timedelta(days=1)
 
 list = webservice.system.list_systems(key)
 
-
+print("-- Kernel version -- Name -- Last boot --")
 for system in list:
 
                 lastboot = webservice.system.get_details(key,system.get('id'))
