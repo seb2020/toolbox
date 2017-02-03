@@ -48,12 +48,13 @@ admin@example.com filter_type=after_first
 
 tail -f /var/log/audit/audit.log | audit2why
 
-
 ## Nginx
 
 ```bash
 setsebool -P httpd_can_network_connect 1
 ```
 
-
-
+```bash
+semanage fcontext -f -l -a -t httpd_sys_content_t /var/www
+ls -lZ
+```
