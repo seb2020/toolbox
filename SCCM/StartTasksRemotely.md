@@ -1,6 +1,6 @@
 # Start a SCCM tasks remotely
 
-```
+```powershell
 $WMIPath = "\\" + $CompName + "\root\ccm:SMS_Client"
 $SMSwmi = [wmiclass] $WMIPath
     [Void]$SMSwmi.TriggerSchedule($strAction)
