@@ -8,27 +8,19 @@
 
 <#
 .SYNOPSIS
-    A brief description of the function or script. This keyword can be used
-    only once in each topic.
-.DESCRIPTION
-    A detailed description of the function or script. This keyword can be
-    used only once in each topic.
+    Generate an XML file for PRTG software monitoring tool
 .NOTES
-    File Name      : xxxx.ps1
-.LINK
-    Script posted over:
-    http://silogix.fr
+    File Name      : monitoring_backupPRTG.ps1
 .EXAMPLE
     Example 1
-.EXAMPLE
-    Example 2
+
 #>
 
-$user = "yourUser"
-$password = "yourPassword"
+$user = "DOMAIN\test"
+$password = "password"
 
 # POST - Authorization
-$Auth = @{uri = "http://yourVEM.fqdn:9399/api/sessionMngr/?v=v1_2";
+$Auth = @{uri = "http://VEEAMSERVER.domain.tld:9399/api/sessionMngr/?v=v1_2";
                    Method = 'POST'; #(or POST, or whatever)
                    Headers = @{Authorization = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("$($user):$($password)"));
            } #end headers hash table
@@ -37,7 +29,7 @@ $Auth = @{uri = "http://yourVEM.fqdn:9399/api/sessionMngr/?v=v1_2";
 $AuthXML = Invoke-WebRequest @Auth
 
 # GET - Session Statistics
-$Sessions = @{uri = "http://yourVEM.fqdn:9399/api/reports/summary/job_statistics";
+$Sessions = @{uri = "http://VEEAMSERVER.domain.tld:9399/api/reports/summary/job_statistics";
                    Method = 'GET';
 				   Headers = @{'X-RestSvcSessionId' = $AuthXML.Headers['X-RestSvcSessionId'];
            } #end headers hash table
@@ -50,7 +42,7 @@ $WarningsJobRuns = $SessionsXML.JobStatisticsReportFrame.WarningsJobRuns
 $FailedJobRuns = $SessionsXML.JobStatisticsReportFrame.FailedJobRuns
 
 # GET - VM Statistics
-$VMs = @{uri = "http://yourVEM.fqdn:9399/api/reports/summary/vms_overview";
+$VMs = @{uri = "http://VEEAMSERVER.domain.tld:9399/api/reports/summary/vms_overview";
                    Method = 'GET';
 				   Headers = @{'X-RestSvcSessionId' = $AuthXML.Headers['X-RestSvcSessionId'];
            } #end headers hash table
