@@ -17,7 +17,6 @@
     File Name      : xxxx.ps1
 .LINK
     Script posted over:
-    http://silogix.fr
 .EXAMPLE
     Example 1
 .EXAMPLE
