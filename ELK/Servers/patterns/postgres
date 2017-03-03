@@ -1,0 +1,1 @@
+POSTGRESQL %{DATESTAMP:timestamp} %{DATA:tz} [-] %{DATA:pid} [-] %{DATA:remotehost} [-] %{DATA:username} [-] %{DATA:database} [-] %{GREEDYDATA:message}
