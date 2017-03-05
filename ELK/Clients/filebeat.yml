@@ -5,9 +5,12 @@ filebeat:
         - /var/log/*.log
         - /var/log/messages
         - /var/log/secure
-        - /var/log/audit/*.log
       input_type: log
       document_type: syslog
+    -
+      paths:
+        - /var/log/audit/audit.log
+      document_type: selinux_audit
     -
       paths:
         - /var/log/nginx/*.log
