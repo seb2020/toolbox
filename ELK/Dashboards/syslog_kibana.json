@@ -1,0 +1,47 @@
+[
+  {
+    "_id": "39fef200-0253-11e7-b40f-ab47bab2e9c9",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Dashboard logstash-syslog*",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"size_x\":7,\"size_y\":4,\"panelIndex\":1,\"type\":\"visualization\",\"id\":\"109d87f0-0253-11e7-b40f-ab47bab2e9c9\",\"col\":1,\"row\":3},{\"size_x\":9,\"size_y\":2,\"panelIndex\":2,\"type\":\"visualization\",\"id\":\"afec2ee0-0250-11e7-b40f-ab47bab2e9c9\",\"col\":4,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "109d87f0-0253-11e7-b40f-ab47bab2e9c9",
+    "_type": "visualization",
+    "_source": {
+      "title": "Event Sources - logstash-syslog-*",
+      "visState": "{\"title\":\"Event Sources - logstash-syslog-*\",\"type\":\"pie\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"isDonut\":false,\"legendPosition\":\"right\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"syslog_hostname.keyword\",\"exclude\":\"\\\"\\\"\",\"size\":50,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"jj\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-syslog-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "afec2ee0-0250-11e7-b40f-ab47bab2e9c9",
+    "_type": "visualization",
+    "_source": {
+      "title": "Events by minutes of logstash-syslog-*",
+      "visState": "{\"title\":\"Events by minutes of logstash-syslog-*\",\"type\":\"histogram\",\"params\":{\"addLegend\":true,\"addTimeMarker\":false,\"addTooltip\":true,\"defaultYExtents\":false,\"legendPosition\":\"right\",\"mode\":\"stacked\",\"scale\":\"linear\",\"setYExtents\":false,\"times\":[]},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Number of events\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"@timestamp\",\"interval\":\"m\",\"customInterval\":\"2h\",\"min_doc_count\":1,\"extended_bounds\":{}}}],\"listeners\":{}}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-syslog-*\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}},\"filter\":[]}"
+      }
+    }
+  }
+]
