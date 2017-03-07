@@ -1,12 +1,12 @@
 [
   {
-    "_id": "Dashboard-for-nginx-Logs",
+    "_id": "Dashboard-for-sonicwall-Logs",
     "_type": "dashboard",
     "_source": {
-      "title": "Dashboard for Nginx Logs",
+      "title": "Dashboard for Sonicwall Logs",
       "hits": 0,
-      "description": "Nginx Logs",
-      "panelsJSON": "[{\"col\":7,\"id\":\"Nginx-Traffic-by-Country-ampersand-OS\",\"row\":5,\"size_x\":6,\"size_y\":4,\"type\":\"visualization\"},{\"col\":4,\"id\":\"Nginx-Traffic-vs.-Location\",\"row\":1,\"size_x\":9,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Nginx-Unique-Visits\",\"row\":5,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Nginx-Non-200-Response-Code-vs.-Time\",\"row\":13,\"size_x\":12,\"size_y\":4,\"type\":\"visualization\"},{\"col\":4,\"id\":\"Nginx-Total-Requests-by-City\",\"row\":5,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Nginx-Total-Requests\",\"row\":7,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Nginx-Bytes-vs.-Time\",\"row\":9,\"size_x\":12,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Nginx-Dashboard\",\"row\":1,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"}]",
+      "description": "sonicwall Logs",
+      "panelsJSON": "[{\"col\":7,\"id\":\"Sonicwall-Traffic-by-Country-ampersand-OS\",\"row\":5,\"size_x\":6,\"size_y\":4,\"type\":\"visualization\"},{\"col\":4,\"id\":\"Sonicwall-Traffic-vs.-Location\",\"row\":1,\"size_x\":9,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Sonicwall-Unique-Visits\",\"row\":5,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Sonicwall-Non-200-Response-Code-vs.-Time\",\"row\":13,\"size_x\":12,\"size_y\":4,\"type\":\"visualization\"},{\"col\":4,\"id\":\"Sonicwall-Total-Requests-by-City\",\"row\":5,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Sonicwall-Total-Requests\",\"row\":7,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Sonicwall-Dashboard\",\"row\":1,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"}]",
       "optionsJSON": "{\"darkTheme\":false}",
       "uiStateJSON": "{}",
       "version": 1,
@@ -19,11 +19,11 @@
     }
   },
   {
-    "_id": "Nginx-Dashboard",
+    "_id": "Sonicwall-Dashboard",
     "_type": "visualization",
     "_source": {
-      "title": "Nginx Dashboard",
-      "visState": "{\"type\":\"markdown\",\"params\":{\"markdown\":\"#### Dashboard for Nginx logs\\nSimple dashboard for exploring & visualizing web traffic by analyzing nginx logs.\"},\"aggs\":[],\"listeners\":{},\"title\":\"Nginx Dashboard\"}",
+      "title": "Sonicwall Dashboard",
+      "visState": "{\"type\":\"markdown\",\"params\":{\"markdown\":\"#### Dashboard for Sonicwall logs\\nSimple dashboard for exploring & visualizing web traffic by analyzing Sonicwall logs.\"},\"aggs\":[],\"listeners\":{},\"title\":\"Sonicwall Dashboard\"}",
       "uiStateJSON": "{}",
       "description": "",
       "version": 1,
@@ -33,114 +33,100 @@
     }
   },
   {
-    "_id": "Nginx-Unique-Visits-by-City",
+    "_id": "Sonicwall-Unique-Visits-by-City",
     "_type": "visualization",
     "_source": {
-      "title": "Unique Visits by City",
+      "title": "Sonicwall Unique Visits by City",
       "visState": "{\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false},\"aggs\":[{\"id\":\"1\",\"type\":\"cardinality\",\"schema\":\"metric\",\"params\":{\"field\":\"geoip.country_name\"}},{\"id\":\"2\",\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"geoip.city_name.keyword\",\"size\":10,\"order\":\"desc\",\"orderBy\":\"1\"}}],\"listeners\":{},\"title\":\"Unique Visits by City\"}",
       "uiStateJSON": "{}",
       "description": "",
       "version": 1,
       "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"index\":\"logstash-nginx-access-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+        "searchSourceJSON": "{\"index\":\"logstash-sonicwall-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
       }
     }
   },
   {
-    "_id": "Nginx-Total-Requests",
+    "_id": "Sonicwall-Total-Requests",
     "_type": "visualization",
     "_source": {
-      "title": "Total Requests",
+      "title": "Sonicwall Total Requests",
       "visState": "{\"type\":\"metric\",\"params\":{\"fontSize\":\"40\",\"spyPerPage\":10},\"aggs\":[{\"id\":\"2\",\"type\":\"count\",\"schema\":\"metric\",\"params\":{}}],\"listeners\":{},\"title\":\"Total Requests\"}",
       "uiStateJSON": "{}",
       "description": "",
       "version": 1,
       "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"index\":\"logstash-nginx-access-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+        "searchSourceJSON": "{\"index\":\"logstash-sonicwall-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
       }
     }
   },
   {
-    "_id": "Nginx-Bytes-vs.-Time",
+    "_id": "Sonicwall-Unique-Visits",
     "_type": "visualization",
     "_source": {
-      "title": "Bytes vs. Time",
-      "visState": "{\"type\":\"line\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"showCircles\":true,\"smoothLines\":false,\"interpolate\":\"linear\",\"scale\":\"linear\",\"drawLinesBetweenPoints\":true,\"radiusRatio\":9,\"times\":[],\"addTimeMarker\":false,\"defaultYExtents\":false,\"setYExtents\":false,\"yAxis\":{}},\"aggs\":[{\"id\":\"1\",\"type\":\"sum\",\"schema\":\"metric\",\"params\":{\"field\":\"bytes\"}},{\"id\":\"2\",\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"@timestamp\",\"interval\":\"auto\",\"customInterval\":\"2h\",\"min_doc_count\":1,\"extended_bounds\":{}}}],\"listeners\":{},\"title\":\"Bytes vs. Time\"}",
-      "uiStateJSON": "{}",
-      "description": "",
-      "version": 1,
-      "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"index\":\"logstash-nginx-access-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
-      }
-    }
-  },
-  {
-    "_id": "Nginx-Unique-Visits",
-    "_type": "visualization",
-    "_source": {
-      "title": "Unique Visits",
+      "title": "Sonicwall Unique Visits",
       "visState": "{\"type\":\"metric\",\"params\":{\"fontSize\":\"40\",\"spyPerPage\":10},\"aggs\":[{\"id\":\"2\",\"type\":\"cardinality\",\"schema\":\"metric\",\"params\":{\"field\":\"geoip.ip\"}}],\"listeners\":{},\"title\":\"Unique Visits\"}",
       "uiStateJSON": "{}",
       "description": "",
       "version": 1,
       "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"index\":\"logstash-nginx-access-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+        "searchSourceJSON": "{\"index\":\"logstash-sonicwall-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
       }
     }
   },
   {
-    "_id": "Nginx-Total-Requests-by-City",
+    "_id": "Sonicwall-Total-Requests-by-City",
     "_type": "visualization",
     "_source": {
-      "title": "Total Requests by City",
+      "title": "Sonicwall Total Requests by City",
       "visState": "{\"type\":\"table\",\"params\":{\"perPage\":10,\"showMeticsAtAllLevels\":false,\"showPartialRows\":false},\"aggs\":[{\"id\":\"1\",\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"geoip.city_name.keyword\",\"size\":20,\"order\":\"desc\",\"orderBy\":\"1\"}}],\"listeners\":{},\"title\":\"Total Requests by City\"}",
       "uiStateJSON": "{}",
       "description": "",
       "version": 1,
       "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"index\":\"logstash-nginx-access-*\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}},\"filter\":[]}"
+        "searchSourceJSON": "{\"index\":\"logstash-sonicwall-*\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}},\"filter\":[]}"
       }
     }
   },
   {
-    "_id": "Nginx-Traffic-vs.-Location",
+    "_id": "Sonicwall-Traffic-vs.-Location",
     "_type": "visualization",
     "_source": {
-      "title": "Traffic vs. Location",
+      "title": "Sonicwall Traffic vs. Location",
       "visState": "{\"type\":\"tile_map\",\"params\":{\"mapType\":\"Scaled Circle Markers\",\"isDesaturated\":true,\"heatMaxZoom\":16,\"heatMinOpacity\":0.1,\"heatRadius\":25,\"heatBlur\":15,\"heatNormalizeData\":true,\"addTooltip\":true},\"aggs\":[{\"id\":\"1\",\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"type\":\"geohash_grid\",\"schema\":\"segment\",\"params\":{\"field\":\"geoip.location\",\"autoPrecision\":true,\"mapZoom\":2,\"mapCenter\":[11.523087506868514,9.4921875],\"precision\":2}}],\"listeners\":{},\"title\":\"Traffic vs. Location\"}",
       "uiStateJSON": "{}",
       "description": "",
       "version": 1,
       "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"index\":\"logstash-nginx-access-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+        "searchSourceJSON": "{\"index\":\"logstash-sonicwall-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
       }
     }
   },
   {
-    "_id": "Nginx-Non-200-Response-Code-vs.-Time",
+    "_id": "Sonicwall-Non-200-Response-Code-vs.-Time",
     "_type": "visualization",
     "_source": {
-      "title": "Non-200 Response Code vs. Time",
+      "title": "Sonicwall Non-200 Response Code vs. Time",
       "visState": "{\"title\":\"Non-200 Response Code vs. Time\",\"type\":\"histogram\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"scale\":\"linear\",\"mode\":\"stacked\",\"times\":[],\"addTimeMarker\":false,\"defaultYExtents\":false,\"setYExtents\":false,\"yAxis\":{},\"legendPosition\":\"right\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"@timestamp\",\"interval\":\"d\",\"customInterval\":\"2h\",\"min_doc_count\":1,\"extended_bounds\":{}}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"group\",\"params\":{\"field\":\"response.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\"}}],\"listeners\":{}}",
       "uiStateJSON": "{}",
       "description": "",
       "version": 1,
       "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"index\":\"logstash-nginx-access-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[{\"meta\":{\"index\":\"logstash-nginx-access-*\",\"key\":\"response\",\"value\":\"200\",\"disabled\":false,\"negate\":true,\"apply\":true,\"alias\":null},\"query\":{\"match\":{\"response\":{\"query\":200,\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}]}"
+        "searchSourceJSON": "{\"index\":\"logstash-sonicwall-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[{\"meta\":{\"index\":\"logstash-sonicwall-*\",\"key\":\"response\",\"value\":\"200\",\"disabled\":false,\"negate\":true,\"apply\":true,\"alias\":null},\"query\":{\"match\":{\"response\":{\"query\":200,\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}]}"
       }
     }
   },
   {
-    "_id": "Nginx-Traffic-by-Country-ampersand-OS",
+    "_id": "Sonicwall-Traffic-by-Country-ampersand-OS",
     "_type": "visualization",
     "_source": {
-      "title": "Traffic by Country & OS",
+      "title": "Sonicwall Traffic by Country & OS",
       "visState": "{\"title\":\"Traffic by Country & OS\",\"type\":\"pie\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"isDonut\":true,\"legendPosition\":\"right\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"split\",\"params\":{\"field\":\"geoip.country_name.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"row\":false}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"agent.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\"}}],\"listeners\":{}}",
       "uiStateJSON": "{}",
       "description": "",
       "version": 1,
       "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"index\":\"logstash-nginx-access-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[{\"meta\":{\"index\":\"logstash-nginx-access-*\",\"key\":\"user_agent.os\",\"value\":\"Other\",\"disabled\":false,\"negate\":true,\"apply\":true,\"alias\":null},\"query\":{\"match\":{\"user_agent.os\":{\"query\":\"Other\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}]}"
+        "searchSourceJSON": "{\"index\":\"logstash-sonicwall-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[{\"meta\":{\"index\":\"logstash-sonicwall-*\",\"key\":\"user_agent.os\",\"value\":\"Other\",\"disabled\":false,\"negate\":true,\"apply\":true,\"alias\":null},\"query\":{\"match\":{\"user_agent.os\":{\"query\":\"Other\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}]}"
       }
     }
   }
