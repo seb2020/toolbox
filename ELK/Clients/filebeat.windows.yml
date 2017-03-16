@@ -1,0 +1,20 @@
+filebeat:
+  prospectors:
+    -
+      paths:
+        - D:\IISLogs\ftp\FTPSVC\*.log
+      document_type: iis-access
+
+registry_file: "C:\ProgramData\filebeat\registry"
+
+output:
+  logstash:
+    hosts: ["SERVEURELK:5044"]
+    bulk_max_size: 1024
+
+    ssl:
+      certificate_authorities: ["D:/filebeat-5.2.2-windows-x86_64/logstash-forwarder.crt"]
+
+logging:
+  files:
+    rotateeverybytes: 10485760 # = 10MB

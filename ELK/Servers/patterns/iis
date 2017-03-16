@@ -1,0 +1,1 @@
+IISACCESS %{TIMESTAMP_ISO8601:log_timestamp} %{IPORHOST:clientIP} %{NUMBER:clientPort} %{NOTSPACE:username} %{NOTSPACE:sitename} %{NOTSPACE:computername} %{NOTSPACE:host} %{IPORHOST:sourceIP} %{NUMBER:sourcePort} %{NOTSPACE:method} %{NOTSPACE:method} %{NOTSPACE:subresponse} %{NUMBER:win32response} %{NUMBER:bytesSent} %{NUMBER:bytesReceived} %{NUMBER:timetaken}
