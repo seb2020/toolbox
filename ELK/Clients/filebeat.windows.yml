@@ -3,7 +3,7 @@ filebeat:
     -
       paths:
         - D:\IISLogs\ftp\FTPSVC\*.log
-      document_type: iis-access
+      document_type: iis-ftp-access
 
 registry_file: "C:\ProgramData\filebeat\registry"
 
