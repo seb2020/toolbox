@@ -6,7 +6,7 @@ df -h
 free
 ```
 
-## Targeted troubleshooting/diagnostic tools:
+## Targeted troubleshooting/diagnostic tools
 
 ### processing
 
