@@ -1,5 +1,11 @@
 # New Let's encrypt website
 
+## Install
+
+```bash
+yum install mod_ssl python-certbot-apache
+```
+
 ## Create Nginx config
 
 ```nginx
