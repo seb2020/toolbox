@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-yum install mod_ssl python-certbot-apache
+yum install certbot
 ```
 
 ## Create Nginx config
