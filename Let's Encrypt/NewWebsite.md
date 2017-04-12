@@ -58,7 +58,7 @@ server {
 ## Generate certificate
 
 ```bash
- certbot certonly --webroot -w /usr/share/nginx/html/ -d data.domain.ch
+certbot certonly --webroot -w /usr/share/nginx/html/ -d data.domain.ch
 ```
 
 ## Reload nginx
