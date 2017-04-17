@@ -21,3 +21,9 @@ oscap xccdf eval \
  --report report.html \
  /usr/share/xml/scap/ssg/content/ssg-centos7-ds.xml
 ```
+
+## Audit Rules
+
+```bash
+auditctl -l
+```
