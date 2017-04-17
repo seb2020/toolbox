@@ -19,6 +19,7 @@ oscap info /usr/share/xml/scap/ssg/content/ssg-centos7-ds.xml
 oscap xccdf eval \
  --profile xccdf_org.ssgproject.content_profile_common \
  --report report.html \
+ --fetch-remote-resources  \
  /usr/share/xml/scap/ssg/content/ssg-centos7-ds.xml
 ```
 
