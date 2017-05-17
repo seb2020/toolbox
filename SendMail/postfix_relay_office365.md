@@ -14,7 +14,7 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 
 smtp_use_tls = yes
 smtp_tls_security_level = may
-smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+smtp_tls_CAfile = /etc/pki/tls/certs/ca-bundle.crt
 
 sender_canonical_classes = envelope_sender, header_sender
 sender_canonical_maps = regexp:/etc/postfix/sender_canonical_maps
@@ -45,10 +45,15 @@ smtp_header_checks = regexp:/etc/postfix/header_check
 domain.ch
 ```
 
----
+## Restart service
 
+```bash
 postmap /etc/postfix/sasl_passwd
-
 service postfix restart
+```
 
+## Test
+
+```bash
 echo "This is a test" | mail -s "Relay test" me@mail.com
+```
