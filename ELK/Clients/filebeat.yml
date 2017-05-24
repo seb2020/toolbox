@@ -19,6 +19,10 @@ filebeat:
       paths:
         - /data/pgdata/*/pg_log/*.log
       document_type: postgres
+    -
+      paths:
+        - /var/log/haproxy/haproxy.log
+      document_type: haproxy
 
   registry_file: /var/lib/filebeat/registry
 
