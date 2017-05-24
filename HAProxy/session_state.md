@@ -1,9 +1,5 @@
-% This is generated content
-% Section 8.5.
+# Session state at disconnection
 
-\section{Session state at disconnection}
-
-\begin{verbatim}
 
 TCP and HTTP logs provide a session termination indicator in the
 "termination_state" field, just before the number of active connections. It is
@@ -321,6 +317,3 @@ re-authenticate. The commonly encountered flags are :
      VI   The server designated by the cookie was not marked dead but could not
           be reached. A redispatch happened and selected another one, which was
           then advertised in the response.
-
-
-\end{verbatim}
