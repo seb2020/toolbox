@@ -2,11 +2,9 @@
 	
 	On Null Email Addresses
 
-		If the user has no email address specififed the script will check extensionAttribute6 for an 
-		email address. If extensionAttribute6 is null $DefaultTo will be used instead.
+		If the user has no email address specififed the script will used $DefaultTo.
 
-		You should place an email address in extensionAttribute6 for service accounts and admin accounts 
-		that do not have their own email address.
+
 
 #>
 
@@ -81,7 +79,6 @@ function Send-ExpireEmail ($To, $From, $SMTPServer, $Subject, $Body, $Days, $Nam
 $ADProperties = @(
 	'PasswordLastSet',
 	'PasswordNeverExpires',
-	'extensionAttribute6',
 	'Mail',
 	'msDS-UserPasswordExpiryTimeComputed'
 )
@@ -90,13 +87,13 @@ $ADProperties = @(
 $ADSelect = @(
 	'Name',
 	'Mail',
-	'extensionAttribute6',
 	'PasswordLastSet',
 	@{n = 'PasswordExpirationDate'; e = {[datetime]::FromFileTime($_.'msDS-UserPasswordExpiryTimeComputed')}},
 	@{n = 'PasswordDaysToExpired'; e = {(New-Timespan -End ([datetime]::FromFileTime($_.'msDS-UserPasswordExpiryTimeComputed'))).Days}}
 )
 
 ## User Query
+Import-Module ActiveDirectory
 $Users = Get-ADUser -Properties $ADProperties -Filter {(PasswordNeverExpires -eq $False) -and (Enabled -eq $true)} | Select-Object $ADSelect | Where-Object {($_.PasswordDaysToExpired -le $ExpireDays) -and ($_.PasswordDaysToExpired -ge 0)}
 
 # Determine attributes and whether or not to send email based on $SendEmail
@@ -107,13 +104,9 @@ foreach ($User in $Users)
 	if ($Span -in $SendEmails)
 	{
 		
-		if ($User.Mail -eq $null -and $User.extensionAttribute6 -eq $null)
+		if ($User.Mail -eq $null)
 		{
 			$MailTo = $DefaultTo
-		}
-		elseif ($User.Mail -eq $null -and $User.extensionAttribute6 -match "^(?("")("".+?""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,6}))$")
-		{
-			$MailTo = $User.extensionAttribute6
 		}
 		else
 		{
@@ -132,7 +125,7 @@ foreach ($User in $Users)
 foreach ($ExpiringUser in $Output)
 {
 	#Call Send-ExpireEmail
-#	Send-ExpireEmail -To $($ExpiringUser.Email) -From $MailFrom -SMTPServer $MailSMTPServer -Subject $MailSubject -Body $MailBody -Days $($ExpiringUser.Span) -Name $($ExpiringUser.Name)
+	#Send-ExpireEmail -To $($ExpiringUser.Email) -From $MailFrom -SMTPServer $MailSMTPServer -Subject $MailSubject -Body $MailBody -Days $($ExpiringUser.Span) -Name $($ExpiringUser.Name)
 }
 
 # Use for testing
