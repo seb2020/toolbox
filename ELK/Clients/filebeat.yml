@@ -19,6 +19,13 @@ filebeat:
       paths:
         - /data/pgdata/*/pg_log/*.log
       document_type: postgres
+      multiline.pattern: '^[[:space:]]'
+      multiline.negate: false
+      multiline.match: after
+    -
+      paths:
+        - /var/log/haproxy/haproxy.log
+      document_type: haproxy
 
   registry_file: /var/lib/filebeat/registry
 

@@ -1,0 +1,133 @@
+[
+  {
+    "_id": "Dashboard-for-haproxy-Logs",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Dashboard for haproxy Logs",
+      "hits": 0,
+      "description": "haproxy Logs",
+      "panelsJSON": "[{\"col\":7,\"id\":\"haproxy-Traffic-by-Country-ampersand-OS\",\"row\":5,\"size_x\":6,\"size_y\":4,\"type\":\"visualization\"},{\"col\":4,\"id\":\"haproxy-Traffic-vs.-Location\",\"row\":1,\"size_x\":9,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"haproxy-Unique-Visits\",\"row\":5,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"},{\"col\":1,\"id\":\"haproxy-Non-200-Response-Code-vs.-Time\",\"row\":13,\"size_x\":12,\"size_y\":4,\"type\":\"visualization\"},{\"col\":4,\"id\":\"haproxy-Total-Requests-by-City\",\"row\":5,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"haproxy-Total-Requests\",\"row\":7,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"},{\"col\":1,\"id\":\"haproxy-Bytes-vs.-Time\",\"row\":9,\"size_x\":12,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"haproxy-Dashboard\",\"row\":1,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "timeTo": "2015-06-10T19:10:56.990Z",
+      "timeFrom": "2015-05-10T19:10:56.990Z",
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "haproxy-Dashboard",
+    "_type": "visualization",
+    "_source": {
+      "title": "haproxy Dashboard",
+      "visState": "{\"type\":\"markdown\",\"params\":{\"markdown\":\"#### Dashboard for haproxy logs\\nSimple dashboard for exploring & visualizing web traffic by analyzing haproxy logs.\"},\"aggs\":[],\"listeners\":{},\"title\":\"haproxy Dashboard\"}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "haproxy-Unique-Visits-by-City",
+    "_type": "visualization",
+    "_source": {
+      "title": "haproxy - Unique Visits by City",
+      "visState": "{\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false},\"aggs\":[{\"id\":\"1\",\"type\":\"cardinality\",\"schema\":\"metric\",\"params\":{\"field\":\"geoip.country_name\"}},{\"id\":\"2\",\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"geoip.city_name.keyword\",\"size\":10,\"order\":\"desc\",\"orderBy\":\"1\"}}],\"listeners\":{},\"title\":\"Unique Visits by City\"}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-haproxy-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "haproxy-Total-Requests",
+    "_type": "visualization",
+    "_source": {
+      "title": "haproxy - Total Requests",
+      "visState": "{\"type\":\"metric\",\"params\":{\"fontSize\":\"40\",\"spyPerPage\":10},\"aggs\":[{\"id\":\"2\",\"type\":\"count\",\"schema\":\"metric\",\"params\":{}}],\"listeners\":{},\"title\":\"Total Requests\"}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-haproxy-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "haproxy-Bytes-vs.-Time",
+    "_type": "visualization",
+    "_source": {
+      "title": "haproxy - Bytes vs. Time",
+      "visState": "{\"type\":\"line\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"showCircles\":true,\"smoothLines\":false,\"interpolate\":\"linear\",\"scale\":\"linear\",\"drawLinesBetweenPoints\":true,\"radiusRatio\":9,\"times\":[],\"addTimeMarker\":false,\"defaultYExtents\":false,\"setYExtents\":false,\"yAxis\":{}},\"aggs\":[{\"id\":\"1\",\"type\":\"sum\",\"schema\":\"metric\",\"params\":{\"field\":\"bytes_read\"}},{\"id\":\"2\",\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"@timestamp\",\"interval\":\"auto\",\"customInterval\":\"2h\",\"min_doc_count\":1,\"extended_bounds\":{}}}],\"listeners\":{},\"title\":\"Bytes vs. Time\"}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-haproxy-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "haproxy-Unique-Visits",
+    "_type": "visualization",
+    "_source": {
+      "title": "haproxy - Unique Visits",
+      "visState": "{\"type\":\"metric\",\"params\":{\"fontSize\":\"40\",\"spyPerPage\":10},\"aggs\":[{\"id\":\"2\",\"type\":\"cardinality\",\"schema\":\"metric\",\"params\":{\"field\":\"geoip.ip\"}}],\"listeners\":{},\"title\":\"Unique Visits\"}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-haproxy-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "haproxy-Total-Requests-by-City",
+    "_type": "visualization",
+    "_source": {
+      "title": "haproxy - Total Requests by City",
+      "visState": "{\"type\":\"table\",\"params\":{\"perPage\":10,\"showMeticsAtAllLevels\":false,\"showPartialRows\":false},\"aggs\":[{\"id\":\"1\",\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"geoip.city_name.keyword\",\"size\":20,\"order\":\"desc\",\"orderBy\":\"1\"}}],\"listeners\":{},\"title\":\"Total Requests by City\"}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-haproxy-*\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "haproxy-Traffic-vs.-Location",
+    "_type": "visualization",
+    "_source": {
+      "title": "haproxy - Traffic vs. Location",
+      "visState": "{\"type\":\"tile_map\",\"params\":{\"mapType\":\"Scaled Circle Markers\",\"isDesaturated\":true,\"heatMaxZoom\":16,\"heatMinOpacity\":0.1,\"heatRadius\":25,\"heatBlur\":15,\"heatNormalizeData\":true,\"addTooltip\":true},\"aggs\":[{\"id\":\"1\",\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"type\":\"geohash_grid\",\"schema\":\"segment\",\"params\":{\"field\":\"geoip.location\",\"autoPrecision\":true,\"mapZoom\":2,\"mapCenter\":[11.523087506868514,9.4921875],\"precision\":2}}],\"listeners\":{},\"title\":\"Traffic vs. Location\"}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-haproxy-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "haproxy-Non-200-Response-Code-vs.-Time",
+    "_type": "visualization",
+    "_source": {
+      "title": "haproxy - Non-200 Response Code vs. Time",
+      "visState": "{\"title\":\"Non-200 Response Code vs. Time\",\"type\":\"histogram\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"scale\":\"linear\",\"mode\":\"stacked\",\"times\":[],\"addTimeMarker\":false,\"defaultYExtents\":false,\"setYExtents\":false,\"yAxis\":{},\"legendPosition\":\"right\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"@timestamp\",\"interval\":\"d\",\"customInterval\":\"2h\",\"min_doc_count\":1,\"extended_bounds\":{}}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"group\",\"params\":{\"field\":\"http_status_code.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-haproxy-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[{\"meta\":{\"index\":\"logstash-haproxy-*\",\"key\":\"response\",\"value\":\"200\",\"disabled\":false,\"negate\":true,\"apply\":true,\"alias\":null},\"query\":{\"match\":{\"response\":{\"query\":200,\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}]}"
+      }
+    }
+  }
+]

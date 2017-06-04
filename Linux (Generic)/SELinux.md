@@ -58,3 +58,9 @@ setsebool -P httpd_can_network_connect 1
 semanage fcontext -f -l -a -t httpd_sys_content_t /var/www
 ls -lZ
 ```
+
+## HAproxy
+
+```bash
+setsebool -P haproxy_connect_any 1
+```
