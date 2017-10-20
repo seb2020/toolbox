@@ -53,10 +53,12 @@ docker stop www
 docker stop www-api
 docker stop www-admin
 
+# Delete container
 docker rm www
 docker rm www-api
 docker rm www-admin
 
+# Run
 docker run -p 7000:80 -v /opt/www/:/var/www/html/ --name www -d eboraas/apache-php 
 docker run -p 8000:80 -v /opt/www/:/var/www/html/ --name www-api -d eboraas/apache-php 
 docker run -p 9000:80 -v /opt/www/:/var/www/html/ --name www-admin -d eboraas/apache-php 
