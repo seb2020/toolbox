@@ -1,0 +1,14 @@
+[local]
+                    # gandi.net API (Production) key
+                    apikey = xlC2ugFv2afTgjmXJ9SDzTik
+                    # Domain
+                    domain = sgir.ch
+                    # A-record name
+                    a_name = test
+                    # TTL (seconds = 5 mintes to 30 days)
+                    ttl = 300
+                    # Production API
+                    api = https://rpc.gandi.net/xmlrpc/
+                    # Host which IP should be changed
+                    host = localhost
+                    

@@ -1,0 +1,20 @@
+CUSTOMJAVACLASS (?:[a-zA-Z$_][a-zA-Z$_0-9]*\.)*[a-zA-Z$_][a-zA-Z$_0-9]*
+#Space is an allowed character to match special cases like 'Native Method' or 'Unknown Source'
+CUSTOMJAVAFILE (?:[A-Za-z0-9_. -]+)
+#Allow special <init> method
+CUSTOMJAVAMETHOD (?:(<init>)|[a-zA-Z$_][a-zA-Z$_0-9]*)
+#Line number is optional in special cases 'Native method' or 'Unknown source'
+CUSTOMJAVASTACKTRACEPART %{SPACE}at %{CUSTOMJAVACLASS:class}\.%{JCUSTOMAVAMETHOD:method}\(%{CUSTOMJAVAFILE:file}(?::%{NUMBER:line})?\)
+# Java Logs
+CUSTOMJAVATHREAD (?:[A-Z]{2}-Processor[\d]+)
+CUSTOMJAVACLASS (?:[a-zA-Z0-9-]+\.)+[A-Za-z0-9$]+
+CUSTOMJAVAFILE (?:[A-Za-z0-9_.-]+)
+CUSTOMJAVASTACKTRACEPART at %{CUSTOMJAVACLASS:class}\.%{WORD:method}\(%{CUSTOMJAVAFILE:file}:%{NUMBER:line}\)
+CUSTOMJAVALOGMESSAGE (.*)
+# MMM dd, yyyy HH:mm:ss eg: Jan 9, 2014 7:13:13 AM
+CUSTOMCATALINA_DATESTAMP %{MONTH} %{MONTHDAY}, 20%{YEAR} %{HOUR}:?%{MINUTE}(?::?%{SECOND}) (?:AM|PM)
+# yyyy-MM-dd HH:mm:ss,SSS ZZZ eg: 2014-01-09 17:32:25,527 -0800
+CUSTOMTOMCAT_DATESTAMP 20%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{HOUR}:?%{MINUTE}(?::?%{SECOND})
+CUSTOMCATALINALOG %{CUSTOMCATALINA_DATESTAMP:timestamp} %{CUSTOMJAVACLASS:class} %{CUSTOMJAVALOGMESSAGE:logmessage}
+# 2014-01-09 20:03:28,269 -0800 | ERROR | com.example.service.ExampleService - something compeletely unexpected happened...
+CUSTOMTOMCATLOG %{CUSTOMTOMCAT_DATESTAMP:timeoccured} %{LOGLEVEL:level}  \[%{JAVACLASS:class}] %{GREEDYDATA:kv_pairs}

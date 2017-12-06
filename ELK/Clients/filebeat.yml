@@ -7,14 +7,16 @@ filebeat:
         - /var/log/secure
       input_type: log
       document_type: syslog
+      fields:
+        type_log: syslog
+      fields_under_root: true
     -
       paths:
         - /var/log/audit/audit.log
       document_type: selinux_audit
-    -
-      paths:
-        - /var/log/nginx/*.log
-      document_type: nginx-access
+      fields:
+        type_log: selinux_audit
+      fields_under_root: true
     -
       paths:
         - /data/pgdata/*/pg_log/*.log
@@ -22,16 +24,15 @@ filebeat:
       multiline.pattern: '^[[:space:]]'
       multiline.negate: false
       multiline.match: after
-    -
-      paths:
-        - /var/log/haproxy/haproxy.log
-      document_type: haproxy
+      fields:
+        type_log: postgres
+      fields_under_root: true
 
   registry_file: /var/lib/filebeat/registry
 
 output:
   logstash:
-    hosts: ["SERVEURELK:5044"]
+    hosts: ["SRVSYSLOG-01.logival.local:5044"]
     bulk_max_size: 1024
 
     ssl:
