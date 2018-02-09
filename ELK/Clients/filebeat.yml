@@ -32,7 +32,7 @@ filebeat:
 
 output:
   logstash:
-    hosts: ["SRVSYSLOG-01.logival.local:5044"]
+    hosts: ["log.home.local:5044"]
     bulk_max_size: 1024
 
     ssl:

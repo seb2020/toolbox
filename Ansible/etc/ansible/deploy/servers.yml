@@ -1,0 +1,5 @@
+- name: Common configuration for all servers
+  hosts: all 
+  tasks:
+  - include_role:
+       name: common
