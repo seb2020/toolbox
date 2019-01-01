@@ -1,0 +1,28 @@
+{
+    "Tickets_simple": [
+        {
+            "Title": "ticket 1",
+            "Description": "ticket 1 description"
+        },
+        {
+            "Title": "ticket 2",
+            "Description": "ticket 2 description"
+        }
+    ],
+    "Tickets_complex": [
+        {
+            "Title": "ticket 3",
+            "Data": {
+                "Description": "ticket 3 description",
+                "Field1" : "ticket 3 field"
+            }
+        },
+        {
+            "Title": "ticket 4",
+            "Data": {
+                "Description": "ticket 4 description",
+                "Field1" : "ticket 4 field"
+            }
+        }
+    ]
+}
