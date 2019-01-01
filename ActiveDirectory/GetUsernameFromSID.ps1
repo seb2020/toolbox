@@ -13,7 +13,6 @@
     SID of the user
 .NOTES
     File Name      : GetUsernameFromSID.ps1
-
 #>
 
 param
