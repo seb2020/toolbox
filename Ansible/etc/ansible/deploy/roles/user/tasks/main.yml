@@ -1,0 +1,42 @@
+ - hosts: all
+   remote_user: ansiblemgnt
+   become: yes
+
+   handlers:
+    - name: "Restart sshd"    
+      systemd:
+        name: "sshd"
+        state: "restarted"
+
+   vars:
+     users:
+     - username: "user"
+       groups: "wheel"
+       password: $6$random_salt$R.....
+
+   tasks:
+   - name: "Create user accounts"
+     user:
+       name: "{{ item.username }}"
+       groups: "{{ item.groups }}"
+       password: "{{ item.password }}"
+     with_items: "{{ users }}"
+
+   - name: "Add authorized keys"
+     authorized_key:
+       user: "{{ item.username }}"
+       key: "{{ lookup('file', '../files/'+ item.username + '.key.pub') }}"
+     with_items: "{{ users }}"
+
+   - name: "Disable root login via SSH"
+     lineinfile:
+      dest: "/etc/ssh/sshd_config"
+      regexp: "^PermitRootLogin"
+      line: "PermitRootLogin no"
+
+   - name: "Disable password authentication"
+     lineinfile:
+      dest: "/etc/ssh/sshd_config"
+      regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication no"
+     notify: "Restart sshd"

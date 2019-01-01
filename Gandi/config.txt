@@ -1,6 +1,6 @@
 [local]
                     # gandi.net API (Production) key
-                    apikey = xlC2ugFv2afTgjmXJ9SDzTik
+                    apikey = APIKEY
                     # Domain
                     domain = sgir.ch
                     # A-record name

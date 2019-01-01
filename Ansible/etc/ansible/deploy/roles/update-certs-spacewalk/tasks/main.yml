@@ -1,0 +1,16 @@
+ - hosts: all
+   remote_user: ansiblemgnt
+   become: yes
+
+   tasks:
+    - name: Archive the old certificate
+      command: mv /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT.old
+
+    - name: Download the new certificate
+      get_url:
+        url: https://spacewalk.domain.local/pub/RHN-ORG-TRUSTED-SSL-CERT
+        dest: /usr/share/rhn
+        validate_certs: no
+
+    - name: Run rhn_check command
+      command: rhn_check

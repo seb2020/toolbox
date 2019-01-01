@@ -36,6 +36,9 @@
 # is still using
 # output userids, too?
 
+# WARNING ! The script should use LF and not CRLF 
+# https://raw.githubusercontent.com/rpm-software-management/yum-utils/master/needs-restarting.py
+
 
 import sys
 import os

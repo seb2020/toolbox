@@ -1,0 +1,12 @@
+ - hosts: all
+   remote_user: ansiblemgnt
+   become: yes
+
+   tasks:
+    - name: Copy color_ps1_prod.sh to /etc/profile.d
+      copy:
+        src: "../files/color_ps1_prod.sh"
+        dest: /etc/profile.d/color_ps1.sh
+        owner: root
+        group: root
+        mode: 0644

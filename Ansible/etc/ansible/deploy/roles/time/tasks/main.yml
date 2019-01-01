@@ -1,0 +1,31 @@
+ - hosts: all
+   remote_user: ansiblemgnt
+   become: yes
+
+   tasks:
+    - name: Install chrony package
+      package:
+        name: chrony
+        state: present
+
+    - name: Disable ntpd service
+      systemd:
+        name: ntpd
+        enabled: False
+        
+    - name: Copy chrony configuration
+      copy:
+        src: ../files/chrony.conf
+        dest: /etc/chrony.conf
+
+    - name: Activate chronyd service
+      systemd:
+        name: chronyd
+        enabled: True
+
+    - name: Start chronyd service
+      systemd:
+        name: chronyd
+        state: restarted
+        daemon_reload: yes
+

@@ -1,0 +1,12 @@
+ - hosts: all
+   remote_user: ansiblemgnt
+   become: yes
+
+   vars:
+     #  python -c 'import crypt; print crypt.crypt("XXX", "$6$random_salt")'
+      user_name: user
+      user_pass: $6$random_salt$123456.
+   
+   tasks:
+    - name: Updating user password
+      user: name={{user_name}} update_password=always password={{user_pass}}

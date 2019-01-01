@@ -1,9 +1,8 @@
  - hosts: all
+
    tasks:
     - name: ping all hosts
       ping:
 
-    - name: Display all variables/facts known for a host
-      debug:
-        var: hostvars[inventory_hostname]
-        verbosity: 4
+    - name: Get kernel version for host
+      debug: msg="{{ lookup('pipe','hostnamectl | grep Kernel') }}"

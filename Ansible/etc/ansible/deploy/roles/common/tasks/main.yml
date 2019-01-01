@@ -2,3 +2,4 @@
    tasks:
     - name: install (or upgrade to) the latest version of htop
       package: name=htop state=latest
+      become: yes

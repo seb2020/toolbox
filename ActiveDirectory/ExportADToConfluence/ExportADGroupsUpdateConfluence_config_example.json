@@ -1,0 +1,26 @@
+{
+    "ADCredentials": {
+      "Username": "user",
+      "PasswordSecureString": "123456",
+      "Domain": "domain.local"
+    },
+    "ConfluenceCredentials": {
+      "Username": "user",
+      "PasswordSecureString": "123456"
+    },
+    "CSV": {
+      "Path": "C:\\scripts\\",
+      "FileName": "export_jira"
+    },
+    "ADInformations": {
+      "Filter": "jira*",
+      "Server": "AD01"
+    },
+    "ConfluenceInformations": {
+      "BaseURL": "https://confluence.domain.local",
+      "EndpointAPI": "rest/api/content/",
+      "PageID": "000000",
+      "PageTitle": "test update api",
+      "PageSpace": "~user"
+    }
+  }

@@ -1,15 +1,16 @@
  - hosts: all
+   remote_user: ansiblemgnt
+   become: yes
+
    tasks:
-  
-##
-## RedHat-based machine
-##
     - name: install own version of 'needs-restarting'
       when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
       copy: 
         src: ../files/needs-restarting.py
-        dest: /root/needs-restarting.py
-        mode: 0700
+        dest: /home/ansiblemgnt/needs-restarting.py
+        owner: ansiblemgnt
+        group: ansiblemgnt
+        mode: 0744
 
     - name: Upgrade all packages in RedHat-based machine - Step 1
       when: ansible_distribution == "CentOS" or ansible_distribution == 'Red Hat Enterprise Linux'
@@ -19,7 +20,7 @@
 
     - name: Reboot required (Red Hat) - Step 2
       when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-      command: /root/needs-restarting.py -r
+      command: /home/ansiblemgnt/needs-restarting.py -r
       register: reboot_required
       ignore_errors: True
       changed_when: False
@@ -33,9 +34,6 @@
       notify:
         - waiting for server to come back after reboot
 
-##
-## Debian-based machine
-##
     - name: Update APT package manager repositories cache in Debian-based machine - Step 1
       when: ansible_distribution == "Ubuntu"
       become: true
@@ -57,9 +55,6 @@
       notify:
         - waiting for server to come back after reboot
 
-##
-## Handlers
-##
    handlers:
     - name: Restart server
       command: shutdown -r now "Reboot triggered by Ansible"
