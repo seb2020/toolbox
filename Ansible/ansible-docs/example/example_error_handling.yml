@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  tasks:
+    - name: download transction_list
+      block:
+        - get_url:
+            url: http://www.domain.ch/file
+            dest: /home/ansible/transaction_list
+        - replace: 
+            path: /home/ansible/transaction_list 
+            regexp: "#BLANKLINE"
+            replace: '\n'
+        - debug: msg="File downloaded"
+      rescue:
+        - debug: msg="domain.ch appears to be down.  Try again later."
+      always:
+        - debug: msg="Attempt completed."

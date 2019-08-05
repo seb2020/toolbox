@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  # 1 server, then 2 then 50% until the end
+  serial:
+    - 1
+    - 2
+    - 50%
+  tasks:
+    - name: deploy the template file
+      template: src=network.j2 dest=/tmp/network.txt

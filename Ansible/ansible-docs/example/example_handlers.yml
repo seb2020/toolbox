@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  handlers:
+    - name: restart apache
+      service: name="httpd" state="restarted"
+      listen: "restart apache"
+  tasks:
+    - name: change config
+      replace:
+        path: /etc/myfile
+        regexp: '^DocumentRoot.*$'
+        replace: 'DocumentRoot "/opt/www"'
+        backup: yes
+      notify: "restart apache"

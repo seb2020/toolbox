@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  becom: yes
+  tasks:
+    - name: install role
+      command: ansible-galaxy install elastic.elasticsearch
