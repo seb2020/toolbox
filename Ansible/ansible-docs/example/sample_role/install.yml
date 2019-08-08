@@ -2,4 +2,4 @@
 - hosts: local
   become: yes
   roles:
-    - apache
+    - sample_role
