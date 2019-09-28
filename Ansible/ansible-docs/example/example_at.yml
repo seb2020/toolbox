@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: Install the at command
+      action: yum name=at state=installed
+    
+    - name: Enable and start at
+      service:
+        name: atd
+        enabled: yes
+        state: started
+
+    - name: Scheule a command in 20 minutes
+      at:
+        command: ls -d / >/dev/null
+        count: 20
+        units: minutes

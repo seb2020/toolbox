@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: Ensure a job that runs at 2 and 5 exists. Creates an entry like "0 5,2 * * df -h >> /tmp/diskspace"
+      cron:
+        name: "Job 0001"
+        minute: "0"
+        hour: "5,2"
+        job: "df -h >> /tmp/diskspace"
+        state: absent
+    - name: Creates an entry like "PATH=/opt/bin" on top of crontab
+      cron:
+        name: PATH
+        env: yes
+        job: /opt/bin
+        state: absent
+    - name: Creates an entry like "APP_HOME=/srv/app" and insert it after PATH declaration
+      cron:
+        name: APP_HOME
+        env: yes
+        job: /srv/app
+        insertbefore: PATH
+        state: absent

@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: archive file
+      archive:
+        path:
+          - /var/log/yum.log
+        dest: /tmp/test.zip
+        format: zip

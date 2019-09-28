@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: Ensure groupe "dev" exists
+      group:
+        name: dev
+        state: present

@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: Add a temp user
+      user:
+        name: toto20
+        shell: /bin/bash
+        groups: dev
+        append: yes
+        expires: 1572269430
+        password: $6$UbRf9aklMxtOZy5B$.O.RpVx06vpkNaC7WShhYRTRqzr50TZwRgeq93ewPs/MC6xCHQKvmQ/HrNDW3AXOYkpFON1QL9ZWImpBJqgx7.
