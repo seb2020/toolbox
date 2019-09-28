@@ -1,0 +1,16 @@
+---
+# tasks file for apache
+- name: install apache
+  yum: name=apache state=latest
+
+- name: copy httpd.conf template
+  template:
+    src: httpd.conf.j2
+    dest: /etc/httpd/conf/httpd.conf
+  notify: restart httpd
+
+- name: enable and start service
+  service:
+    name: httpd
+    enabled: yes
+    state: started

@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  becom: yes
+  tasks:
+    - name: install php
+      yum: name={{ item }}
+      with_items:
+        - php
+        - php-gd
+        - php-pear
+        - php-mysql
+    notify: restart httpd

@@ -1,0 +1,7 @@
+employee:
+  name: bob
+  id: 42
+d
+access :
+- employee['name']
+- employee.name

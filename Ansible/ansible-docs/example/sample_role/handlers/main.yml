@@ -1,0 +1,6 @@
+---
+# handlers
+
+- name: restart apache service
+  sevice: name=httpd state=restarted
+  listen: "restart httpd"
