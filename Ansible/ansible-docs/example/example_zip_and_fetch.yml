@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: Archive
+      archive:
+        path: /var/log
+        dest: /home/ansible/logs.tar.gz
+        owner: ansible
+        group: ansible
+        format: gz
+    - name: Fetch data
+      fetch:
+        src: /home/ansible/logs.zip
+        dest: /home/ansible/logbackup-{{ ansible_hostname }}.tar.gz
+        flat: yes
