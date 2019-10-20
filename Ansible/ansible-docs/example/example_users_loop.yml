@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+
+  - name: create users
+    user:
+      name: "{{ item.name }}"
+      groups: " {{ item.groups }}"
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      ssh_key_file: .ssh/id_rsa
+      shell: /bin/bash
+      password: " {{ item.password | password_hash('sha512')  }} "
+    loop:
+      - { name: 'account1', groups: 'wheel', password: 'test' }
+      - { name: 'account2', groups: 'wheel', password: 'test' }
