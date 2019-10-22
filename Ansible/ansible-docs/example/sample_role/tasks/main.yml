@@ -1,7 +1,7 @@
 ---
 # tasks file for apache
 - name: install apache
-  yum: name=apache state=latest
+  import_tasks: install_httpd.yml
 
 - name: copy httpd.conf template
   template:

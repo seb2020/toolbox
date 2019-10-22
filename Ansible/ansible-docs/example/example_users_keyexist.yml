@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - user: name=noc
+    - file:
+        state: directory
+        path: /home/noc/.ssh
+        mode: 0600
+        owner: noc
+        group: noc
+    - copy:
+        src: authorized_keys
+        dest: /home/noc/.ssh/authorized_keys
+        mode: 0644
+        owner: noc
+        group: noc

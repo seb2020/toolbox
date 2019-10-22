@@ -1,0 +1,2 @@
+- name: install apache
+  yum: name=apache state=latest
