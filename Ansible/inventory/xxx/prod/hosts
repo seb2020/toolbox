@@ -1,0 +1,5 @@
+[XXX-Prod]
+SERVER1.home.lan
+
+[XXX-Prod:vars]
+env=prod

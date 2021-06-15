@@ -1,0 +1,20 @@
+---
+- name: NTP Check
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Run ntpdc -p (block)
+      block:
+        - name: Run ntpdc -p
+          command: /usr/sbin/ntpdc -p
+          register: output
+      rescue:
+        - name: Run chronyc (block)
+          block:
+          - name: Run chronyc
+            command: /usr/bin/chronyc sources
+            register: output
+      always:
+        - name: Display output
+          debug:
+            var: output.stdout_lines

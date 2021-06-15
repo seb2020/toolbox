@@ -1,0 +1,76 @@
+---
+# tasks file for update-reboot
+- name: install own version of 'needs-restarting'
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  copy: 
+    src: ../files/needs-restarting.py
+    dest: /home/ansiblemgnt/needs-restarting.py
+    owner: ansiblemgnt
+    group: ansiblemgnt
+    mode: 0744
+
+- name: Upgrade all packages in RedHat-based machine - Step 1
+  when: ansible_distribution == "CentOS" or ansible_distribution == 'Red Hat Enterprise Linux'
+  yum:
+    name: '*'
+    state: latest
+
+- name: Reboot required (Red Hat) - Step 2
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  command: /home/ansiblemgnt/needs-restarting.py -r
+  register: reboot_required
+  ignore_errors: True
+  changed_when: False
+
+- name: Reboot required (Red Hat) - Step 3
+  when: (ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux') and reboot_required.rc == 1
+  shell: ( /bin/sleep 5 ; shutdown -r now "Reboot triggered by Ansible" ) &
+  async: 30
+  poll: 0
+  ignore_errors: true
+  notify:
+    - waiting for server to come back after reboot
+
+- name: Get all installed and updated packages - Step 4
+  shell: rpm -qa --last | grep -e "$(date +%a\ %b\ %d)" -e "$(date +%a\ %d\ %b)" | cut -f 1 -d " "
+  args:
+    warn: false
+  register: installed_updated_packages
+  changed_when: false
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Show installed and updated packages - Step 5
+  debug:
+    msg: "{{ installed_updated_packages.stdout_lines }}"
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Update repositories in Ubuntu-based machine - Step 1
+  when: ansible_distribution == "Ubuntu"
+  apt: 
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
+
+- name: Upgrade all packages in Ubuntu-based machine - Step 2
+  when: ansible_distribution == "Ubuntu"
+  apt: 
+    upgrade: dist
+    force_apt_get: yes
+
+- name: Check if a reboot is needed for Debian - Step 3
+  when: ansible_distribution == "Ubuntu"
+  register: reboot_required_file
+  stat: 
+    path: /var/run/reboot-required
+    get_md5: no
+
+- name: Reboot the Ubuntu server after update - Step 4
+  reboot:
+    msg: "Reboot initiated by Ansible due to kernel updates"
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: uptime
+  when: reboot_required_file.stat.exists and ansible_distribution == "Ubuntu"
+

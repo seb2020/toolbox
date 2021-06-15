@@ -1,0 +1,23 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+10.0.74.21 AD01-01 AD01-01.ganesh.local
+10.0.74.22 AD01-02 AD01-02.ganesh.local
+10.0.74.30 DB01-CL DB01-CL.ganesh.local
+10.0.74.31 DB01-01 DB01-01.ganesh.local
+10.0.74.32 DB01-02 DB01-02.ganesh.local
+10.0.74.33 DB01-03 DB01-03.ganesh.local
+10.0.74.34 DB02-01 DB02-01.ganesh.local
+10.0.74.35 DB02-02 DB02-02.ganesh.local
+10.0.74.41 CONTAINER01-01 CONTAINER01-01.ganesh.local
+10.0.74.42 CONTAINER01-02 CONTAINER01-02.ganesh.local
+10.0.74.43 CONTAINER02-01 CONTAINER02-01.ganesh.local
+10.0.74.44 CONTAINER02-02 CONTAINER02-02.ganesh.local
+10.0.74.60 LB01-CL LB01-CL.ganesh.local
+10.0.74.61 LB01-01 LB01-01.ganesh.local
+10.0.74.62 LB02-01 LB02-01.ganesh.local
+10.0.74.63 LB01-02 LB01-02.ganesh.local
+10.0.74.71 IDP01-01 IDP01-01.ganesh.local
+10.0.74.72 IDP01-02 IDP01-02.ganesh.local
+10.0.74.73 IDP02-01 IDP02-01.ganesh.local
+10.0.74.74 IDP02-02 IDP02-02.ganesh.local

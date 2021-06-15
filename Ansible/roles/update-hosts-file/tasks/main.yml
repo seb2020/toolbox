@@ -1,0 +1,10 @@
+---
+# tasks file for update-hosts-file-meditools
+- name: Copy /etc/hosts file
+  copy:
+    src: ../files/hosts
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes

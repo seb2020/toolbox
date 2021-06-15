@@ -1,0 +1,11 @@
+---
+# tasks file for roles/debug-selinux
+- name: test to see if selinux is running
+  shell: /usr/sbin/getenforce
+  register: sestatus
+  changed_when: false
+
+
+- name: print a message if selinux is enabled
+  debug: msg="selinux is enabled"
+  when: '"Enforcing" in sestatus.stdout'

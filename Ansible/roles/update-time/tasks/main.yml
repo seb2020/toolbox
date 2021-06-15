@@ -1,0 +1,37 @@
+---
+# tasks file for roles/update-time
+- name: Install chrony package
+  package:
+    name: chrony
+    state: present
+
+- name: Disable ntpd service
+  systemd:
+    name: ntpd
+    enabled: False
+  ignore_errors: yes
+        
+- name: Copy chrony configuration for RHEL or CentOS
+  copy:
+    src: ../files/chrony.conf
+    dest: /etc/chrony.conf
+  when: ansible_distribution == "CentOS" or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Copy chrony configuration for Ubuntu
+  copy:
+    src: ../files/chrony.conf
+    dest: /etc/chrony/chrony.conf
+  when: ansible_distribution == "Ubuntu"
+
+
+- name: Activate chronyd service
+  systemd:
+    name: chronyd
+    enabled: True
+
+- name: Start chronyd service
+  systemd:
+    name: chronyd
+    state: restarted
+    daemon_reload: yes
+

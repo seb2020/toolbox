@@ -1,0 +1,29 @@
+PGHOME=/u01/app/postgres/product/{{ dmk_postgresql_version }}
+SEGSIZE=2
+BLOCKSIZE=8
+
+./configure --prefix=${PGHOME} \
+            --exec-prefix=${PGHOME} \
+            --bindir=${PGHOME}/bin \
+            --libdir=${PGHOME}/lib \
+            --sysconfdir=${PGHOME}/etc \
+            --includedir=${PGHOME}/include \
+            --datarootdir=${PGHOME}/share \
+            --datadir=${PGHOME}/share \
+            --with-pgport=5432 \
+            --with-perl \
+            --with-python \
+            --with-openssl \
+            --with-pam \
+            --with-ldap \
+            --with-libxml \
+            --with-libxslt \
+            --with-segsize=${SEGSIZE} \
+            --with-blocksize=${BLOCKSIZE} \
+	        --with-systemd \
+            --with-extra-version=" dbi services build"
+make -j 2 all
+make install
+cd contrib
+make -j 2 install
+

@@ -1,0 +1,18 @@
+vrrp_script chk_haproxy {
+    script "killall -0 haproxy"
+    interval 2
+    weight 2
+}
+
+vrrp_instance VI_1 {
+    interface eth0
+    state {{ item.role }} 
+    virtual_router_id 51
+    priority {{ item.priority }}
+    virtual_ipaddress {
+      {{ virtual_ip }}
+  }
+  track_script {
+    chk_haproxy
+  }
+}

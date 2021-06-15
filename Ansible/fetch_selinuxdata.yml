@@ -1,0 +1,7 @@
+- hosts: all
+  tasks:
+    - name: Specifying a path directly
+      fetch:
+        src: /etc/selinux/targeted/contexts/files/file_contexts.local
+        dest: /tmp/{{ inventory_hostname }}/etc/selinux/targeted/contexts/files/file_contexts.local
+        flat: yes

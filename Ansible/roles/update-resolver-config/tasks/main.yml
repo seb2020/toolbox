@@ -1,0 +1,7 @@
+---
+# tasks file for roles/update-resolver-config
+- name: Add timeout options
+  lineinfile:
+    path: /etc/sysconfig/network
+    line: 'RES_OPTIONS="timeout:1"'
+    insertbefore: # Created by anaconda

@@ -1,0 +1,9 @@
+---
+# tasks file for roles/debug-last-login
+- name: Get last login for a specific user
+  shell: last {{ users }} -n 2
+  register: result
+
+- debug:
+    var: result.stdout_lines
+    

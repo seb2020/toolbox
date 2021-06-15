@@ -1,0 +1,22 @@
+#
+# systemd integration for etcd 
+# Put this file under /etc/systemd/system/etcd.service
+#     then: systemctl daemon-reload
+#     then: systemctl list-unit-files | grep etcd
+#     then: systemctl enable etcd.service
+#
+
+[Unit]
+Description=dbi services etcd service
+After=network.target
+
+[Service]
+User=postgres
+Type=notify
+ExecStart=/u01/app/postgres/local/dmk/bin/etcd --config-file /u01/app/postgres/local/dmk/etc/etcd.conf
+Restart=always
+RestartSec=10s
+LimitNOFILE=40000
+
+[Install]
+WantedBy=multi-user.target

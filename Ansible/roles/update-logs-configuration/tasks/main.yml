@@ -1,0 +1,23 @@
+---
+# tasks file for roles/update-logs-configuration
+- name: Copy company CA to pki folder
+  copy:
+    src: ../files/company.local-CA.crt
+    dest: /etc/pki/tls/certs/company.local-CA.crt
+
+- name: Change logs endpoint address
+  replace:
+    path: /etc/filebeat/filebeat.yml
+    replace: 'logs-in.company.local:15044'
+    regexp: 'LOG-01.company.local:5044'
+   
+- name: Change certificate
+  replace:
+    path: /etc/filebeat/filebeat.yml
+    replace: '/etc/pki/tls/certs/company.local-CA.crt'
+    regexp: '/etc/pki/tls/certs/logstash-forwarder.crt'
+ 
+- name: Restart filebeat service
+  service:
+    name: filebeat
+    state: restarted

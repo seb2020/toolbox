@@ -1,0 +1,27 @@
+#
+# systemd integration for patroni 
+# Put this file under /etc/systemd/system/patroni.service
+#     then: systemctl daemon-reload
+#     then: systemctl list-unit-files | grep patroni
+#     then: systemctl enable patroni.service
+#
+
+[Unit]
+Description=dbi services patroni service
+After=etcd.service syslog.target network.target
+
+[Service]
+User=postgres
+Group=postgres
+Type=simple
+ExecStartPre=-/usr/bin/sudo /sbin/modprobe softdog
+ExecStartPre=-/usr/bin/sudo /bin/chown postgres /dev/watchdog
+ExecStart=/u01/app/postgres/local/dmk/bin/patroni /u01/app/postgres/local/dmk/etc/patroni.yml
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=process
+Restart=no
+TimeoutSec=30
+
+[Install]
+WantedBy=multi-user.target
+

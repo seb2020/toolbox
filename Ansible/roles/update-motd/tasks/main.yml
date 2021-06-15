@@ -1,0 +1,6 @@
+---
+# tasks file for roles/update-motd
+- name: Deploy /etc/motd template file
+  template:
+    src: motd.j2
+    dest: /etc/motd

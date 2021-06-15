@@ -1,0 +1,15 @@
+---
+# tasks file for roles/common
+- name: Install standard package
+  package: name={{item}} state=present
+  with_items:
+   - htop
+   - ncdu
+   - tree
+
+- name: Install the correct kernel for Ubuntu Hyper-V
+  package: name={{item}} state=present
+  with_items:
+   - linux-azure
+  when: ansible_distribution == 'Ubuntu'
+

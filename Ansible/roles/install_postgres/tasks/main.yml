@@ -1,0 +1,233 @@
+---
+- name: Install all dependencies for PostgreSQL on CentOS/RHEL
+  package: 
+    name: "{{item}}"
+    state: present
+  with_items:
+   - gcc
+   - openldap-devel
+   - python-devel
+   - readline-devel
+   - redhat-lsb
+   - bison
+   - flex
+   - perl-ExtUtils-Embed
+   - zlib-devel
+   - crypto-utils
+   - openssl-devel
+   - pam-devel
+   - libxml2-devel
+   - libxslt-devel
+   - openssh-clients
+   - bzip2
+   - net-tools
+   - wget
+   - screen
+   - unzip
+   - sysstat
+   - xorg-x11-xauth
+   - systemd-devel
+   - bash-completion
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Remove iwl packages on CentOS/RHEL
+  package: 
+    name: "{{item}}"
+    state: removed
+  with_items:
+   - iwl*
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: upgrade all packages on CentOS/RHEL
+  package:
+    name: '*'
+    state: latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: Update APT cache on Ubuntu
+  apt:
+    update_cache: yes
+
+- name: Install all dependencies for PostgreSQL on Ubuntu
+  package: 
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - libldap2-dev
+  - libreadline-dev
+  - libssl-dev
+  - bison
+  - flex
+  - libghc-zlib-dev
+  - libcrypto++-dev
+  - libxml2-dev
+  - libxslt1-dev
+  - tcl
+  - tclcl-dev
+  - bzip2
+  - wget
+  - screen
+  - libpam0g-dev
+  - libperl-dev
+  - make
+  - unzip
+  - libpam0g-dev
+  - tcl-dev
+  - python
+  - libsystemd-dev
+  - sudo
+  - python-dev
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Check and fix /u01/app/{{ postgres_user }}/local
+  file:
+    path: /u01/app/{{ postgres_user }}/local
+    state: directory
+    mode: 0700
+    recurse: yes
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+
+- name: Check and fix /u01 
+  file:
+    path: /u01
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_user }}"
+    mode: 0700
+
+- name: Check and fix /u01/app
+  file:
+    path: /u01/app
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+    mode: 0700
+
+- name: Check and fix /u01/app/{{ postgres_user }}
+  file:
+    path: /u01/app/{{ postgres_user }}
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+    mode: 0700
+
+- name: Check and fix /u02/pgdata/
+  file:
+    path: /u02/pgdata/
+    state: directory
+    mode: 0700
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+
+- name: Check and fix /u02/pgdata/{{ postgresql_major_version }}
+  file:
+    path: /u02/pgdata/{{ postgresql_major_version }}
+    state: directory
+    mode: 0700
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+
+- name: Check and fix /u02/pgdata/{{ postgresql_major_version }}/{{ cluster_name }}
+  file:
+    path: /u02/pgdata/{{ postgresql_major_version }}/{{ cluster_name }}
+    state: directory
+    mode: 0700
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+
+- name: Check and fix /u99/pgdata/
+  file:
+    path: /u99/pgdata/
+    state: directory
+    mode: 0700
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+
+- name: Check and fix /etc/pgtab
+  file:
+    path: /etc/pgtab
+    state: touch
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+    mode: 0600
+
+- name: check if PostgreSQL source code exists
+  stat: 
+    path: /home/{{ postgres_user }}/source.tar.bz2
+  register: source_available
+
+- name: Download the PostgreSQL source code if it is not already there
+  get_url:
+    url: https://ftp.postgresql.org/pub/source/v{{ postgresql_version }}/postgresql-{{ postgresql_version }}.tar.bz2
+    dest: /home/{{ postgres_user }}/source.tar.bz2
+    mode: 0775
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+  when: source_available.stat.exists == false
+
+- name: Check if PostgreSQL is already installed
+  stat:
+    path: /u01/app/{{ postgres_user }}/product/{{ dmk_postgresql_version }}/bin/postgres
+  register: postgresql_is_installed
+
+- name: extract the sources when PostgreSQL is not already installed
+  unarchive:
+    src: /home/{{ postgres_user }}/source.tar.bz2
+    dest: /home/{{ postgres_user }}/
+    remote_src: yes
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+
+  when: postgresql_is_installed.stat.exists == false
+
+- template:
+    src: compile.sh.j2
+    dest: /home/{{ postgres_user }}/postgresql-{{ postgresql_version }}/compile.sh
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+    mode: 0700
+
+- name: Install PostgreSQL from source code
+  shell: /bin/su -c "cd /home/{{ postgres_user }}/postgresql-{{ postgresql_version }}; ./compile.sh" - {{ postgres_user }}
+  when: postgresql_is_installed.stat.exists == false
+
+- name: check if DMK for PostgreSQL source code exists
+  stat:
+    path: /u01/app/{{ postgres_user }}/local/PostgreSQL-DMK-{{ dmk_version }}.zip
+  register: dmk_source_available
+
+- name: check if DMK for PostgreSQL is extracted
+  stat:
+    path: /u01/app/{{ postgres_user }}/local/dmk/bin/dmk.bash
+  register: dmk_extracted
+
+- name: Copy DMK source distribution
+  copy:
+    src: PostgreSQL-DMK-{{ dmk_version }}.zip
+    dest: /u01/app/{{ postgres_user }}/local/
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+    mode: 0700
+  when: dmk_source_available.stat.exists == false
+
+- name: extract DMK
+  unarchive:
+    src: /u01/app/{{ postgres_user }}/local/PostgreSQL-DMK-{{ dmk_version }}.zip
+    dest: /u01/app/{{ postgres_user }}/local/
+    remote_src: yes
+    owner: "{{ postgres_user }}"
+    group: "{{ postgres_group }}"
+  when: dmk_extracted.stat.exists == false
+
+- name: check if DMK is installed
+  stat:
+    path: /home/{{ postgres_user }}/.DMK_HOME
+  register: dmk_installed
+
+- lineinfile:
+    path: /etc/pgtab
+    line: 'pg{{ postgresql_version }}:/u01/app/{{ postgres_user }}/product/{{ dmk_postgresql_version }}:dummy:9999:D'
+    create: no
+  when: dmk_installed.stat.exists == false
+
+- name: Execute DMK for the first time
+  shell: /bin/su -c "/u01/app/{{ postgres_user }}/local/dmk/bin/dmk.bash; cat /u01/app/{{ postgres_user }}/local/dmk/templates/profile/dmk.postgres.profile >> /home/{{ postgres_user }}/.bash_profile" - {{ postgres_user }}
+  when: dmk_installed.stat.exists == false
