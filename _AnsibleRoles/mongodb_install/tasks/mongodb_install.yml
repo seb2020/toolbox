@@ -1,0 +1,32 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "mongodb_install.yml"
+
+- name: Check if cluster has already been bootstraped
+  stat:
+    path: "{{ mongo_path_root }}/{{ mongo_flag_filename }}"
+  register: flag_state
+
+- name: Fail if cluster is already bootstraped
+  fail: 
+    msg: "The flag file {{ flag_state }} exists. The cluster has already been bootstraped"
+  when: flag_state.stat.exists
+
+- name: Install mongodb package
+  package:
+    name: mongodb-org
+    state: present
+
+- name: Open firewall port
+  firewalld:
+    port: "{{ mongo_port }}/tcp"
+    permanent: yes
+    state: enabled
+    immediate: true
+
+- name: Make sure pymongo is present
+  pip:
+    name: pymongo
+    state: present
+    executable: pip3

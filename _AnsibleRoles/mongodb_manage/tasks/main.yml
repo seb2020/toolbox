@@ -1,0 +1,5 @@
+---
+- { include_vars: "mongodb_{{ env }}.yml" } # Load correct variables for env
+
+- { include: manage.yml, become: true }
+- { include: backup.yml, when:  "'mongodb6_backup' in group_names", become: true }

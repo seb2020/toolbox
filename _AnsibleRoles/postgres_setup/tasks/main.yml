@@ -1,0 +1,22 @@
+---
+
+- { include_vars: "user_passwords_{{ env }}.yml" } # Load correct variables for env
+- { include_vars: "patroni_config_{{ hostname[:-1] }}.yml" } # Load correct variables for env
+- { include_vars: "keepalived_{{ ansible_hostname }}.yml" } # Load correct variables for the host
+
+- { include: firewall.yml, become: true } # Firewall configuration
+
+- { include: postgres_install.yml, become: true } # Install postgres
+
+- { include: haproxy.yml, become: true } # Install haproxy
+
+- { include: keepalived.yml, become: true } # Install keepalived
+
+- { include: python_packages.yml, become: true } # Install required python packages
+
+- { include: etcd_install.yml, become: true } # Install etcd
+
+- { include: patroni_install.yml, become: true } # Install patroni with etcd
+- { include: patroni_directories.yml, become: true } # Create patroni folders
+- { include: patroni_bootstrap.yml, become: true } # bootstrap the patroni configuration
+- { include: create_patroni_service.yml, become: true }  # create the systemd unit

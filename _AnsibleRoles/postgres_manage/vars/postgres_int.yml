@@ -1,0 +1,98 @@
+---
+# User for connecting to postgres.
+pg_user: postgres
+pg_user_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          xxx
+
+# Backup parameters
+backup_node: nodea # Backup node should have a separate disk
+pg_backup_path: /backup
+pg_lnx_user: postgres # linux user
+pg_lnx_group: postgres # linux
+pg_backup_user: backup # postgres user
+pg_backup_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          xxx
+
+
+###
+### Add database, user and priv !
+
+# Database to manage
+postgres_databases:
+  - name: bidon1_int
+    owner: test
+    encoding: utf8
+    ctype: en_US.UTF-8
+    collate: en_US.UTF-8
+    state: present
+
+ 
+# User to manage
+postgres_users: 
+  - name: zbx_monitor
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          30316332323030393630303131323338626331653065316638373661623634613730363331376134
+          6531306434633132333131363732343239393532376235330a643366656561306665356531356166
+          66333130343335353934356265646231623636653364323036633462633138326561353033613138
+          3835313430313239310a626236313938363464653434303263396131353136643239666230643662
+          36346432393265353639373336373136633431666138326430373639326466613931
+    state: present
+
+  - name: test
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          32393735363638353539626435353264653934336234633162623062306163623032366566653931
+          3733656437323030363931353037386333663666623335340a633334366239633961666366303266
+          32326136303362303865663537383363393064626138346538303965356136623061323136363235
+          6332336334323132330a633739313734616330366533643365363839656139363131333235353531
+          3938
+    state: present
+
+  - name: backup
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          63313433343238336335396461313636323239633763653039653236663339396362303661313336
+          6638633832623365646661316530646430333030333235370a613031306633626631336433323836
+          32636461663863663434323464663761366566633935306264316331363135616436633363333166
+          3062326337616266320a353437393165626138633834333133353566636433323033633938356631
+          30643332303166363133313562646365313561633532396337363036633565623564
+    state: present
+
+postgres_privs_zabbix: # DO NOT TOUCH
+# GRANT EXECUTE ON FUNCTION pg_catalog.pg_ls_dir(text) TO zbx_monitor;
+# GRANT EXECUTE ON FUNCTION pg_catalog.pg_stat_file(text) TO zbx_monitor;
+# GRANT EXECUTE ON FUNCTION pg_catalog.pg_ls_waldir() TO zbx_monitor;
+  - db: postgres  
+    type: function
+    state: present
+    privs: EXECUTE
+    role: zbx_monitor
+    objs: "pg_ls_waldir()"
+    schema: pg_catalog
+
+  - db: postgres  
+    type: function
+    state: present
+    privs: EXECUTE
+    role: zbx_monitor
+    objs: "pg_stat_file(text)"
+    schema: pg_catalog
+
+  - db: postgres  
+    type: function
+    state: present
+    privs: EXECUTE
+    role: zbx_monitor
+    objs: "pg_ls_dir(text)"
+    schema: pg_catalog
+
+# Privileges
+## Similar to GRANT ALL PRIVILEGES ON DATABASE library TO librarian_user
+postgres_privs:   
+  - db: bidon1_int # db name
+    privs: ALL
+    type: database
+    role: test # user

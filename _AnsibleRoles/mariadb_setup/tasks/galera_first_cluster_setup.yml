@@ -1,0 +1,40 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "galera_first_cluster_setup.yml"
+
+- name: Check if cluster has already been bootstraped
+  stat:
+    path: /etc/my.cnf.d/bootstrap_ok
+  register: bootstrap_state
+
+- name: Fail if cluster is already bootstraped
+  fail: msg="The flag file {{ bootstrap_state }} exists. The cluster has already been bootstraped"
+  when: bootstrap_state.stat.exists
+
+- name: Fail if boostrap_required is false
+  fail: msg="The var boostrap_required is set to {{ boostrap_required }}. The node won't be boostraped. If it's a new cluster, change the value of this var to true"
+  when: not boostrap_required
+
+- name: MySQL configuration file
+  template:
+    src: ../templates/galera_cluster.cnf.j2
+    dest: /etc/my.cnf.d/galera_cluster.cnf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: uncomment the wsrep_provider_options="pc.bootstrap=true"
+  replace:
+      path: /etc/my.cnf.d/galera_cluster.cnf
+      regexp:  '#wsrep_provider_options="pc.bootstrap=true"'
+      replace: 'wsrep_provider_options="pc.bootstrap=true"'
+      backup: yes
+
+- name: Create the flag file
+  file:
+    path: /etc/my.cnf.d/bootstrap_ok
+    state: touch
+
+- name: Start MySQL/MariaDB using /etc/init.d/mysql start --wsrep-new-cluster command for first node.
+  command: "galera_new_cluster"

@@ -1,0 +1,9 @@
+module mongodb_proc_fs 1.0;
+require {
+        type sysctl_fs_t;
+        type mongod_t;
+        class dir search;
+}
+ 
+#============= mongod_t ==============
+allow mongod_t sysctl_fs_t:dir search;

@@ -1,0 +1,29 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "mongodb_bootstrap.yml"
+
+- name: Display command to bootstrap cluster
+  debug:
+    msg: |
+      'Connect to one node of the replicaset with : 
+
+      mongosh -u USER -p --authenticationDatabase admin 
+
+      and update with correct server name this command :
+
+      "rs.initiate(
+      {
+      _id: "{{ mongo_cluster_name }}",
+      members: [
+          { _id: 0, host: "nodea.contoso.lan" },
+          { _id: 1, host: "nodeb.contoso.lan" },
+          { _id: 2, host: "nodec.contoso.lan" }
+          ]
+      })"
+      '
+
+- name: Create flag file to prevent futur execution of this playbook
+  template:
+    src: "{{ role_path }}/templates/{{ mongo_flag_filename }}.j2"
+    dest: "{{ mongo_path_root }}/{{ mongo_flag_filename }}"

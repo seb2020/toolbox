@@ -1,0 +1,14 @@
+---
+- { include_vars: "user_passwords_{{ env }}.yml" } # Load correct variables for env
+- { include_vars: "galera_cluster_variables_{{ env }}.yml" } # Load correct variables for env
+
+- { include: galera_cluster_node_setup.yml, become: true, when:  "'mariadb106_servers' in group_names" } # change server group name
+
+- { include: galera_first_cluster_setup.yml, become: true, when:  "'mariadb106_master_node' in group_names" } # change server group name
+
+- { include: galera_cluster_join.yml, become: true, when:  "'mariadb106_slave_nodes' in group_names" } # change server group name
+
+- { include: logrotate.yml, become: true, when:  "'mariadb106_servers' in group_names" } # change server group name
+
+- { include_vars: "keepalived_{{ ansible_hostname }}.yml" } # Load correct variables for the host
+- { include: keepalived.yml, become: true }

@@ -1,0 +1,34 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "keepalived.yml"
+
+- name: Install required packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - keepalived
+
+- name: copy configuration file
+  template:
+    src: "{{ role_path }}/templates/keepalived.conf.j2"
+    dest: /etc/keepalived/keepalived.conf
+    owner: root
+    group: root
+    mode: 0600
+  notify: restart keepalived
+
+- name: Configure firewalld for vrrp
+  firewalld:
+    rich_rule: rule protocol value="vrrp" accept
+    permanent: yes
+    state: enabled
+    immediate: yes
+  
+- name: enable and start the service
+  service:
+    name: keepalived
+    state: started
+    enabled: yes

@@ -1,0 +1,20 @@
+---
+vrrp_script_interval: 2
+vrrp_script_rise: 2  # requires 2 failures for KO
+vrrp_script_fall: 2 # requires successes for OK switch
+vrrp_script_weight: 50
+
+vrrp_instance_name: VI-INT-PG-13
+vrrp_instance_state: backup # master
+vrrp_instance_interface: ens192
+vrrp_instance_virtual_router_id: 90
+vrrp_instance_priority: 199
+vrrp_instance_advert_int: 1
+
+vrrp_instance_authentication_type: pass
+vrrp_instance_authentication_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          XXX
+
+vrrp_ipaddress: X.X.X.X/23
+

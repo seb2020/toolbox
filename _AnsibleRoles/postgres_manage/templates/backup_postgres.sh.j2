@@ -1,0 +1,24 @@
+#!/bin/bash
+{{ ansible_managed | comment}}
+
+backupdir="{{ pg_backup_path }}"
+day=`date +"%d%m%Y_%H%M%S"`;
+mkdir -p $backupdir/$day;
+
+echo "PostgreSQL Backup for $HOSTNAME";
+echo ""
+echo "================================="
+echo ""
+echo `date`;
+echo ""
+for database in `PGPASSWORD={{ pg_backup_password }} /bin/psql -h localhost -U {{ pg_backup_user }} -lt | awk '{print $1}' | grep -vE '\||^$|template0'`;
+    do
+    printf "Exporting $database...";
+    PGPASSWORD={{ pg_backup_password }} /bin/pg_dump -h localhost -U {{ pg_backup_user }} -c $database | gzip -c > $backupdir/$day/$database.sql.gz;
+    /bin/chmod 600 $backupdir/$day/$database.sql.gz;
+    printf "done\n";
+done
+echo ""
+echo `date`;
+echo;
+exit 0;

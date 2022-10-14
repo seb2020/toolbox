@@ -1,0 +1,34 @@
+{{ ansible_managed | comment }}
+
+global_defs {
+  ## The $ID is a unique number, the logic is that this value is the last number in the VIP.
+  router_id {{ vrrp_instance_virtual_router_id }}
+  enable_script_security
+}
+
+vrrp_script {{ vrrp_script_name }} {
+  script "{{ vrrp_script_path }}"
+  interval {{ vrrp_script_interval|default(2) }}
+  fall {{ vrrp_script_rise|default(2) }}
+  rise {{ vrrp_script_fall|default(2) }}
+  weight {{ vrrp_script_weight|default(2) }}
+}
+
+vrrp_instance {{ vrrp_instance_name }} {
+  state {{ vrrp_instance_state|upper }}
+  interface {{ vrrp_instance_interface }}
+  virtual_router_id {{ vrrp_instance_virtual_router_id }}
+  priority {{ vrrp_instance_priority }}
+  advert_int {{ vrrp_instance_advert_int }}
+
+  authentication {
+    auth_type {{ vrrp_instance_authentication_type|upper }}
+    auth_pass {{ vrrp_instance_authentication_pass }}
+  }
+  virtual_ipaddress {
+    {{ vrrp_ipaddress }}
+  }
+  track_script {
+    {{ vrrp_script_name }}
+  }
+}

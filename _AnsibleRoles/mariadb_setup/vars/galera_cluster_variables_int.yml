@@ -1,0 +1,41 @@
+---
+# General settings
+mysql_daemon: "mariadb"
+mysql_enabled_on_startup: true
+
+# Bootstrap the master node ? Change to true for first run only !
+boostrap_required: false
+
+# MySQL connection settings.
+mysql_port: "3306"
+mysql_bind_address: '0.0.0.0'
+mysql_skip_name_resolve: false
+mysql_datadir: /data/mysql
+mysql_sql_mode: ~
+mysql_socket: "{{ mysql_datadir }}/mysql.sock"
+mysql_pid_file: /var/run/mysqld/mysqld.pid
+
+# Log file settings.
+mysql_log_file_group: mysql
+
+# Logging settings.
+mysql_log: ""
+mysql_log_error: "" #syslog if needed
+mysql_logdir: /var/log/mysql
+mysql_log_error_file: mysql.err
+# mysql_syslog_tag: mysql
+
+# Slow query log settings.
+mysql_slow_query_log_enabled: false
+mysql_slow_query_time: "2"
+# mysql_slow_query_log_file: /var/log/mysql-slow.log
+
+# Galera conf
+galera_cluster_name: galera_cluster
+galera_cluster_user: sst_user
+
+# Logrotate
+mysql_logrotate_min_size: 50M
+mysql_logrotate_max_size: 100M
+mysql_logrotate_old_files: 7
+mysql_logrotate_old_dir: "{{ mysql_logdir }}/old-logs"

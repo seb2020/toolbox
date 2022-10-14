@@ -1,0 +1,10 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "patroni_install.yml"
+
+- name: install patroni and etcd
+  pip:
+   name: "{{ patroni_packages }}"
+   state: present
+   executable: /usr/bin/pip3

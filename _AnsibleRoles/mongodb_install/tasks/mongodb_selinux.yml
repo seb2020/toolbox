@@ -1,0 +1,69 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "mongodb_selinux.yml"
+
+- name: Copy SELinux type enforcement file
+  copy: 
+    src: "{{ item }}"
+    dest: /tmp/
+  with_items:
+    - "{{ role_path }}/files/mongodb_cgroup_memory.te"
+    - "{{ role_path }}/files/mongodb_proc_fs.te"
+    - "{{ role_path }}/files/mongodb_proc_net.te"
+    - "{{ role_path }}/files/mongodb_sysctl_net.te"
+
+- name: Compile SELinux module file
+  command: checkmodule -M -m -o {{ item }}.mod {{ item }}.te
+  with_items:
+    - "/tmp/mongodb_cgroup_memory"
+    - "/tmp/mongodb_proc_fs"
+    - "/tmp/mongodb_proc_net"
+    - "/tmp/mongodb_sysctl_net"
+
+- name: Build SELinux policy package
+  command: semodule_package -o {{ item }}.pp -m {{ item }}.mod
+  with_items:
+    - "/tmp/mongodb_cgroup_memory"
+    - "/tmp/mongodb_proc_fs"
+    - "/tmp/mongodb_proc_net"
+    - "/tmp/mongodb_sysctl_net"
+
+- name: Load SELinux policy package
+  command: semodule -i {{ item }}
+  with_items:
+    - "/tmp/mongodb_cgroup_memory.pp"
+    - "/tmp/mongodb_proc_fs.pp"
+    - "/tmp/mongodb_proc_net.pp"
+    - "/tmp/mongodb_sysctl_net.pp"
+
+- name: Remove temporary files
+  file: 
+    path: "/tmp/{{ item }}.*"
+    state: absent
+  with_items:
+    - "/tmp/mongodb_cgroup_memory"
+    - "/tmp/mongodb_proc_fs"
+    - "/tmp/mongodb_proc_net"
+    - "/tmp/mongodb_sysctl_net"
+
+- name: Allow mongod to modify files in {{ mongo_path_data }}
+  sefcontext:
+    target: '{{ mongo_path_data }}(/.*)?'
+    setype: mongod_var_lib_t
+    state: present
+
+- name: Apply new SELinux file context to filesystem
+  command: restorecon -irv {{ mongo_path_data }}
+
+- name: Allow mongod to modify files in {{ mongo_path_log }}
+  sefcontext:
+    target: '{{ mongo_path_log }}(/.*)?'
+    setype: mongod_log_t
+    state: present
+
+- name: Apply new SELinux file context to filesystem
+  command: restorecon -irv {{ mongo_path_log }}
+
+- name: Apply new SELinux file context to filesystem
+  command: restorecon -irv /data

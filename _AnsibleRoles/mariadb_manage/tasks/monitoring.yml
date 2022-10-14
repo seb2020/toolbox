@@ -1,0 +1,13 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "monitoring.yml"
+
+- name: Copy Zabbix userparameter file
+  template:
+    src: ../templates/userparameter_galera.conf.j2
+    dest: /etc/zabbix/zabbix_agent2.d/userparameter_galera.conf
+    mode: 0640
+    owner: zabbix
+    group: zabbix
+  notify: restart zabbix-agent2

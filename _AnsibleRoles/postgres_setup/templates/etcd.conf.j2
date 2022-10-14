@@ -1,0 +1,11 @@
+{{ ansible_managed | comment }}
+
+name: {{ ansible_hostname }}
+data-dir: /data/etcd
+initial-advertise-peer-urls: http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:2380
+listen-peer-urls: http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}:2380
+listen-client-urls: http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:2379,http://localhost:2379
+advertise-client-urls: http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:2379
+initial-cluster: {% for h in ansible_play_hosts %}
+{{ hostvars[h]['ansible_hostname'] }}=http://{{ hostvars[h]['ansible_default_ipv4']['address'] }}:2380{% if not loop.last %},{% endif %}
+{% endfor %}

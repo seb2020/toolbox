@@ -1,0 +1,36 @@
+---
+# Backup parameters
+mongodb_backup_user: "dbbackup"
+mongodb_backup_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          xxx
+mongodb_backup_path: "/backup"
+
+# Zabbix monitoring
+mongodb_zabbix_user: "zabbix"
+mongodb_zabbix_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          xxx
+
+# Admin user for accessing MongoDB
+# Do not change !
+mongodb_login_database: admin
+mongodb_login_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          xxx
+mongodb_login_user: mongoadmin
+mongodb_login_port: 27017
+mongodb_replicaset: clustermongo.contoso.lan
+mongodb_login_host: "127.0.0.1"
+
+# Collections
+# Create 'bidon1_int' database user with name 'testuser' and password '12345'.
+mongodb_collections:
+  - database: bidon1_int
+    name: testuser
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          xxx
+    state: present
+
+ 

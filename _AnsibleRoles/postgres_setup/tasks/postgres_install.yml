@@ -1,0 +1,71 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "postgres_install.yml"
+
+- name: Check if cluster has already been bootstraped
+  stat:
+    path: /data/postgres/postgresql.conf
+  register: bootstrap_state
+
+- name: Fail if cluster is already bootstraped
+  fail: msg="The flag file {{ bootstrap_state }} exists. The cluster has already been bootstraped"
+  when: bootstrap_state.stat.exists
+
+- name: disable postgresql module
+  command: dnf module disable postgresql -y
+
+- name: Ensure PostgreSQL packages are installed
+  dnf:
+    name: "{{ pg_packages }}"
+    state: present
+    enablerepo: "{{ pg_enablerepo | default(omit, true) }}"
+  loop_control:
+    loop_var: pg_packages
+    # Don't let postgresql-contrib cause the /usr/bin/python symlink
+    # to be installed, which breaks later Ansible runs on Fedora 30,
+    # and affects system behavior in multiple ways.
+   # exclude: python-unversioned-command
+
+- name: Set postgres user's OS password
+  user:
+    name: "{{ pg_lnx_user }}"
+    password: "{{ pg_lnx_user_password }}"
+    state: present
+
+- name: Add {{ pg_bin_path }} to PATH
+  template:
+    src: "{{ role_path }}/templates/path_postgres_bin.sh.j2"
+    dest: "/etc/profile.d/path_postgres_bin.sh"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add postgres account to sudoers
+  template:
+    src: "{{ role_path }}/templates/postgres_sudo.j2"
+    dest: "/etc/sudoers.d/postgres"
+    owner: root
+    group: root
+    validate: 'visudo -cf %s'
+    mode: 0440
+
+- name: Update right on /data
+  file:
+    path: /data
+    owner: "{{ pg_lnx_user }}"
+    group: "{{ pg_lnx_group }}"
+
+- name: Create the file to load the watchdog module
+  file:
+    path: /etc/modules-load.d/softdog.conf
+    state: touch
+ 
+- name: Add the watchdog module
+  shell: modprobe softdog
+ 
+- name: Change ownershhip of the watchdog device
+  shell: chown postgres /dev/watchdog
+  args:
+    warn: false
+ 

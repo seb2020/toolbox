@@ -1,0 +1,8 @@
+---
+# handlers file
+
+- name: restart keepalived
+  service:
+    name: keepalived
+    state: restarted
+  ignore_errors: yes

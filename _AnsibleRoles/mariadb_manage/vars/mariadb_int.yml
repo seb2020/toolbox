@@ -1,0 +1,109 @@
+---
+# Backup parameters
+mysql_backup_user: "dbbackup"
+mysql_backup_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          XXX
+mysql_backup_path: "/backup"
+
+# Zabbix monitoring
+mysql_zabbix_user: "zabbix"
+mysql_zabbix_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          XXX
+
+# Database
+mysql_databases:
+  - name: bidon1_int
+    collation: utf8_general_ci
+    encoding: utf8
+    state: present
+
+
+# User
+mysql_users: 
+  - name: "{{ mysql_backup_user }}" ## Backup user do not remove !
+    host: "localhost"
+    password: "{{ mysql_backup_password }}"
+    priv: "*.*:SELECT,SHOW VIEW,LOCK TABLES,PROCESS,TRIGGER,EXECUTE"
+    state: present
+
+  - name: "{{ mysql_zabbix_user }}" ## Zabbix user do not remove !
+    host: "localhost"
+    password: "{{ mysql_zabbix_password }}"
+    priv: "*.*:REPLICATION CLIENT,PROCESS,SHOW DATABASES,SHOW VIEW"
+    state: present
+
+  - name: account1
+    host: "%"
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          XXXX
+    priv: "bidon1_int.*:ALL"
+    state: present
+
+
+################################################################
+## DANGER ZONE !!! Test your change in LAB before 
+################################################################
+
+# MySQL connection settings. DONT CHANGE IT IN PRODUCTION !!!!
+mysql_port: "3306"
+mysql_bind_address: '0.0.0.0'
+mysql_skip_name_resolve: false
+mysql_datadir: /data/mysql 
+mysql_sql_mode: ~
+mysql_socket: /var/lib/mysql/mysql.sock
+mysql_pid_file: /var/run/mysqld/mysqld.pid
+
+# Log file settings.
+mysql_log_file_group: mysql
+
+# Logging settings.
+mysql_log: ""
+mysql_log_error: "" #syslog if needed
+mysql_logdir: /var/log/mysql
+mysql_log_error_file: mysql.err
+# mysql_syslog_tag: mysql
+
+# Slow query log settings.
+mysql_slow_query_log_enabled: false
+mysql_slow_query_time: "2"
+# mysql_slow_query_log_file: /var/log/mysql-slow.log
+
+# Memory settings (default values optimized ~512MB RAM).
+mysql_key_buffer_size: "256M"
+mysql_max_allowed_packet: "64M"
+mysql_table_open_cache: "256"
+mysql_sort_buffer_size: "1M"
+mysql_read_buffer_size: "1M"
+mysql_read_rnd_buffer_size: "4M"
+mysql_myisam_sort_buffer_size: "64M"
+mysql_thread_cache_size: "8"
+mysql_query_cache_type: "0"
+mysql_query_cache_size: "16M"
+mysql_query_cache_limit: "1M"
+mysql_max_connections: "500"
+mysql_tmp_table_size: "16M"
+mysql_max_heap_table_size: "16M"
+mysql_group_concat_max_len: "1024"
+mysql_join_buffer_size: "262144"
+
+# Other settings.
+mysql_lower_case_table_names: "0"
+mysql_wait_timeout: "28800"
+mysql_event_scheduler_state: "OFF"
+
+# InnoDB settings.
+mysql_innodb_file_per_table: "1"
+# Set .._buffer_pool_size up to 80% of RAM but beware of setting too high.
+mysql_innodb_buffer_pool_size: "256M"
+# Set .._log_file_size to 25% of buffer pool size.
+mysql_innodb_log_file_size: "64M"
+mysql_innodb_log_buffer_size: "8M"
+mysql_innodb_flush_log_at_trx_commit: "1"
+mysql_innodb_lock_wait_timeout: "50"
+mysql_innodb_large_prefix: "1"
+mysql_innodb_file_format: "barracuda"
+
+

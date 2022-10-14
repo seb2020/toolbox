@@ -1,0 +1,12 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "python_packages.yml"
+
+- name: Install required patroni packages
+  pip:
+   name: "{{ patroni_python_packages }}"
+   state: present
+   executable: /usr/bin/pip3
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ pg_bin_path }}"

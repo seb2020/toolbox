@@ -1,0 +1,13 @@
+{{ ansible_managed | comment }}
+
+{{ mongo_path_log}}/*.log {
+       daily
+       size {{ mongodb_logrotate_max_size }}
+       rotate {{ mongodb_logrotate_old_files}}
+       missingok
+       copytruncate
+       compress
+       nomail
+       notifempty
+       create 0660 {{ mongo_user }} {{ mongo_group }}
+}

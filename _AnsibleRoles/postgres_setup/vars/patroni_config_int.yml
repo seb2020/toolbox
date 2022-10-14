@@ -1,0 +1,12 @@
+---
+# Set major version of PostgreSQL
+pg_major_version: 13
+
+# Patroni YAML
+pg_patroni_scope: pg13-int
+pg_patroni_namespace: pg13-int
+
+# patroni host ips for patroni.yml config. Should match IP of 3 nodes used for the deployment
+patroni0_ip: X.X.X.X
+patroni1_ip: X.X.X.X
+patroni2_ip: X.X.X.X

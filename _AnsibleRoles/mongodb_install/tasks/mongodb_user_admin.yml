@@ -1,0 +1,39 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "mongodb_user_admin.yml"
+
+- name: Create configuration with no auth and no key
+  template:
+    src: "{{ role_path }}/templates/mongodb_noauth.conf.j2"
+    dest: "/etc/mongod.conf"
+    group: "{{ mongo_group }}"
+    owner: "{{ mongo_user }}"
+    mode: 0644
+
+- name: Restart mongodb
+  service:
+    name: mongod
+    state: restarted
+    
+- name: Create admin user in mongo db
+  community.mongodb.mongodb_user:
+    database: admin
+    name: "{{ mongo_user_admin_login }}"
+    password: "{{ mongo_user_admin_password }}"
+    roles: readWriteAnyDatabase,dbAdminAnyDatabase,userAdminAnyDatabase,clusterAdmin,restore,backup
+    state: present
+
+- name: Create configuration with auth and no key
+  template:
+    src: "{{ role_path }}/templates/mongodb_auth.conf.j2"
+    dest: "/etc/mongod.conf"
+    group: "{{ mongo_group }}"
+    owner: "{{ mongo_user }}"
+    mode: 0644
+
+- name: Restart mongodb
+  service:
+    name: mongod
+    state: restarted
+    

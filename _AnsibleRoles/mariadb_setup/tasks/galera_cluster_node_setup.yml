@@ -1,0 +1,222 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "galera_cluster_node_setup.yml"
+
+- name: Get cluster node IP addresses
+  set_fact:
+    galera_cluster_ips: "gcomm://{{ groups['mariadb106_servers'] | map('extract', hostvars, ['ansible_ssh_host']) | join(',') }}"
+
+- name: Check if cluster has already been bootstraped
+  stat:
+    path: /etc/my.cnf.d/bootstrap_ok
+  register: bootstrap_state
+
+- name: Fail if cluster is already bootstraped
+  fail: msg="The flag file {{ bootstrap_state }} exists. The cluster has already been bootstraped"
+  when: bootstrap_state.stat.exists
+
+- name: testing...galera_cluster_ips
+  debug:
+    msg: "{{ galera_cluster_ips }}"
+
+- name: Update /etc/hosts from inventory
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '.*{{ item }}$'
+    line: '{{hostvars[item].ansible_default_ipv4.address}} {{ item }}'
+    state: present
+  with_items:
+    - "{{ groups.mariadb106_servers }}"
+
+- name: Make sure pymysql is present
+  pip:
+    name: pymysql
+    state: present
+
+- name: Install required packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - libpmem
+      - socat
+      - boost-program-options
+      - xinetd
+
+- name: Install MariaDB-server and Galera-4
+  yum:
+    name: "{{ packages }}"
+    enablerepo: "Default_Organization_MariaDB_mariadb_10_6_rhel8_amd64"
+    disablerepo: "rhel-8-for-x86_64-appstream-rpms"
+    state: latest
+  vars:
+    packages:
+      - MariaDB-server
+      - galera-4
+
+- name: Add mysql port to the firewall
+  firewalld:
+      service: mysql
+      zone: public
+      permanent: true
+      state: enabled
+      immediate: true
+
+- name: Add tcp ports used by MariaDB and Galera to the firewall
+  firewalld:
+    port: "{{ item }}"
+    zone: public
+    permanent: true
+    state: enabled
+    immediate: true
+  with_items:
+    - '{{ mysql_port }}/tcp' # MariaDB port
+    - '4567/tcp' # Galera Cluster Replication
+    - '4568/tcp' # Galera Incremental State Transfer
+    - '4444/tcp' # Galera State Snapshot Transfer
+
+- name: Restart firewalld to have new rules take effect.
+  service:
+    name: firewalld
+    state: restarted
+
+- name: MariaDB basic configuration file
+  template:
+    src: ../templates/server.cnf.j2
+    dest: /etc/my.cnf.d/server.cnf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create slow query log file (if configured).
+  command: "touch {{ mysql_slow_query_log_file }}"
+  args:
+    creates: "{{ mysql_slow_query_log_file }}"
+    warn: false
+  when: mysql_slow_query_log_enabled
+
+- name: Create datadir if it does not exist
+  file:
+    path: "{{ mysql_datadir }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: 0755
+    setype: mysqld_db_t
+
+- name: Check if MariaDB data files are already present
+  stat:
+    path: "{{ mysql_datadir }}/mysql/user.frm"
+  register: stat_mariadb_datafiles_present
+
+- name: Copy MariaDB data from default path to the correct path
+  copy:
+    src: /var/lib/mysql/
+    dest: "{{ mysql_datadir }}"
+    owner: mysql
+    group: mysql
+    mode: 0755
+    remote_src: yes
+  when: not stat_mariadb_datafiles_present.stat.exists
+
+- name: Create logdir if it does not exist
+  file:
+    path: "{{ mysql_logdir }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: 0755
+    setype: mysqld_log_t
+
+- name: Set ownership on slow query log file (if configured).
+  file:
+    path: "{{ mysql_slow_query_log_file }}"
+    state: file
+    owner: mysql
+    group: "{{ mysql_log_file_group }}"
+    mode: 0640
+  when: mysql_slow_query_log_enabled
+
+- name: Create error log file (if configured).
+  command: "touch {{ mysql_log_error }}"
+  args:
+    creates: "{{ mysql_log_error }}"
+    warn: false
+  when:
+    - mysql_log | default(true)
+    - mysql_log_error | default(false)
+
+- name: Set ownership on error log file (if configured).
+  file:
+    path: "{{ mysql_log_error }}"
+    state: file
+    owner: mysql
+    group: "{{ mysql_log_file_group }}"
+    mode: 0640
+  when:
+    - mysql_log | default(true)
+    - mysql_log_error | default(false)
+
+- name: Ensure MariaDB is started and enabled on boot.
+  service: 
+    name: "{{ mysql_daemon }}"
+    state: started
+    enabled: "{{ mysql_enabled_on_startup }}"
+
+- name: Create ~/.my.cnf
+  template:
+    src: my.cnf.j2
+    dest: ~/.my.cnf
+
+- name: Delete anonymous MariaDB server user
+  mysql_user:
+    login_unix_socket: /var/lib/mysql/mysql.sock
+    check_implicit_admin: yes
+    user: ""
+    host: "{{ item }}"
+    state: "absent"
+  with_items:
+    - ""
+    - "{{ ansible_nodename }}"
+    - localhost
+
+- name: Change root user password on first run
+  mysql_user:
+    login_unix_socket: /var/lib/mysql/mysql.sock
+    name: root
+    password: "{{ mysql_root_password }}"
+    state: present
+    check_implicit_admin: yes
+    priv: '*.*:ALL,GRANT'
+  with_items:
+    - "{{ ansible_nodename }}"
+    - 127.0.0.1
+    - localhost
+
+- name: Create Galera replication user
+  mysql_user:
+      login_user: root
+      login_password: "{{ mysql_root_password }}"
+      name: "{{ galera_cluster_user }}"
+      password: "{{ galera_cluster_user_password }}"
+      priv: '*.*:ALL,GRANT'
+      state: present
+      host: "{{ item }}"
+  with_items:
+      - "{{ ansible_nodename }}"
+      - 127.0.0.1
+      - localhost
+
+- name: Remove the MariaDB test database
+  mysql_db:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    db: test
+    state: absent
+
+- name: Stop MariaDB
+  service:
+    name: mysql
+    state: stopped

@@ -1,0 +1,26 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "firewall.yml"
+
+- name: Configure firewalld
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    zone: public
+    state: enabled
+  with_items:
+    - "{{ etcd_port }}/udp"
+    - "{{ etcd_port }}/tcp"
+    - "{{ etcd_port2 }}/udp"
+    - "{{ etcd_port2 }}/tcp"
+    - "{{ pg_port }}/tcp"
+    - "{{ patroni_port }}/tcp"
+    - "{{ haproxy_bind_port }}/tcp"
+    - "{{ haproxy_bind_port_admin }}/tcp"
+
+- name: Reload service firewalld
+  systemd:
+    name: firewalld
+    state: reloaded

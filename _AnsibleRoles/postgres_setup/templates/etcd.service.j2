@@ -1,0 +1,16 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=etcd service
+After=network.target
+ 
+[Service]
+User={{ pg_lnx_user }}
+Type=notify
+ExecStart=/usr/bin/etcd --config-file /etc/etcd.conf
+Restart=always
+RestartSec=10s
+LimitNOFILE=40000
+ 
+[Install]
+WantedBy=multi-user.target

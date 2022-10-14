@@ -1,0 +1,63 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "manage.yml"
+
+# Get the replicaset status and then lookup the primary's hostname and save to a variable
+- name: Ensure replicaset is stable before beginning
+  community.mongodb.mongodb_status:
+    login_user: "{{ mongodb_login_user }}"
+    login_password: "{{ mongodb_login_password }}"
+    poll: 3
+    interval: 10
+    replica_set: "{{ mongodb_replicaset }}"
+  register: rs
+
+- name: Lookup PRIMARY replicaset member
+  set_fact:
+    mongodb_primary_host: "{{ item.key.split('.')[0] }}"
+  loop: "{{ lookup('dict', rs.replicaset) }}"
+  when: "'PRIMARY' in item.value"
+
+# Create backup user on primary node
+- name: Ensure backup user is present
+  community.mongodb.mongodb_user:
+    login_database: "{{ mongodb_login_database }}"
+    login_password: "{{ mongodb_login_password }}"
+    login_user: "{{ mongodb_login_user }}"
+    replica_set: "{{ mongodb_replicaset }}"
+    database: admin
+    user: "{{ mongodb_backup_user }}"
+    password: "{{ mongodb_backup_password }}"
+    state: "present"
+    roles: "root"
+  when: mongodb_primary_host == ansible_hostname
+
+# Create zabbix user on primary node
+- name: Ensure zabbix user is present
+  community.mongodb.mongodb_user:
+    login_database: "{{ mongodb_login_database }}"
+    login_password: "{{ mongodb_login_password }}"
+    login_user: "{{ mongodb_login_user }}"
+    replica_set: "{{ mongodb_replicaset }}"
+    database: admin
+    user: "{{ mongodb_zabbix_user }}"
+    password: "{{ mongodb_zabbix_password }}"
+    state: "present"
+    roles: "clusterMonitor"
+  when: mongodb_primary_host == ansible_hostname
+
+# Create DB only on primary node
+- name: Ensure MongoDB collections and users are present
+  community.mongodb.mongodb_user:
+    login_database: "{{ mongodb_login_database }}"
+    login_password: "{{ mongodb_login_password }}"
+    login_user: "{{ mongodb_login_user }}"
+    replica_set: "{{ mongodb_replicaset }}"
+    database: "{{ item.database }}"
+    user: "{{ item.name }}"
+    password: "{{ item.password }}"
+    state: "{{ item.state }}"
+    roles: "readWrite"
+  with_items: "{{ mongodb_collections }}"
+  when: mongodb_primary_host == ansible_hostname

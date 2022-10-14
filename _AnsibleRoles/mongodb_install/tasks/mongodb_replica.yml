@@ -1,0 +1,26 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "mongodb_replica.yml"
+
+- name: Create replica key file
+  template:
+    src: "{{ role_path }}/templates/mongo-key.j2"
+    dest: "{{ mongo_path_data }}/keys/mongo-key"
+    group: "{{ mongo_group }}"
+    owner: "{{ mongo_user }}"
+    mode: 0400
+    
+- name: Create configuration with auth and key
+  template:
+    src: "{{ role_path }}/templates/mongodb_authkey_replication.conf.j2"
+    dest: "/etc/mongod.conf"
+    group: "{{ mongo_group }}"
+    owner: "{{ mongo_user }}"
+    mode: 0644
+
+- name: Restart mongodb
+  service:
+    name: mongod
+    state: restarted
+    

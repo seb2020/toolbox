@@ -1,0 +1,49 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "keepalived.yml"
+
+- name: Install required packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - keepalived
+
+- name: Create required user for running script
+  user:
+    name: keepalived_script
+    comment: keepalived_script
+    shell: /sbin/nologin
+    
+- name: copy script
+  template:
+    src: ../templates/mysqltest.sh.j2
+    dest: /usr/libexec/keepalived/mysqltest.sh
+    owner: keepalived_script
+    group: keepalived_script
+    setype: keepalived_unconfined_script_exec_t
+    mode: 0770
+
+- name: copy configuration file
+  template:
+    src: ../templates/keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+    owner: root
+    group: root
+    mode: 0600
+  notify: restart keepalived
+
+- name: Configure firewalld for vrrp
+  firewalld:
+    rich_rule: rule protocol value="vrrp" accept
+    permanent: yes
+    state: enabled
+    immediate: yes
+  
+- name: enable and start the service
+  service:
+    name: keepalived
+    state: started
+    enabled: yes

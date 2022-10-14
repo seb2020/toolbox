@@ -1,0 +1,27 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "mongodb_folders.yml"
+
+- name: Create required folders - log
+  file:
+    path: "{{ mongo_path_log }}"
+    owner: "{{ mongo_user }}"
+    group: "{{ mongo_group }}"
+    setype: mongod_log_t
+    state: directory
+
+- name: Create required folders - data
+  file:
+    path: "{{ mongo_path_log }}"
+    owner: "{{ mongo_user }}"
+    group: "{{ mongo_group }}"
+    setype: mongod_var_lib_t
+    state: directory
+
+- name: Create required folders - keys
+  file:
+    path: "{{ mongo_path_keys }}"
+    owner: "{{ mongo_user }}"
+    group: "{{ mongo_group }}"
+    state: directory

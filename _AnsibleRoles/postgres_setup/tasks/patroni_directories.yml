@@ -1,0 +1,34 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "patroni_directories.yml"
+
+- name: patroni data directory
+  file:
+    path: "{{ patroni_data_dir }}"
+    owner: "{{ pg_lnx_user }}"
+    group: "{{ pg_lnx_group }}"
+    state: directory
+    mode: 0700
+
+- name: patroni log directory
+  file:
+    path: "{{ patroni_log_dir }}/"
+    owner: "{{ pg_lnx_user }}"
+    group: "{{ pg_lnx_group }}"
+    state: directory
+
+- name: postgres owner bin directory
+  file:
+    path: "{{ pg_bin_path }}"
+    recurse: yes
+    owner: "{{ pg_lnx_user }}"
+    group: "{{ pg_lnx_group }}"
+
+- name: patroni conf directory
+  file:
+    path: "{{ patroni_home }}"
+    owner: "{{ pg_lnx_user }}"
+    group: "{{ pg_lnx_group }}"
+    state: directory
+    mode: 0700

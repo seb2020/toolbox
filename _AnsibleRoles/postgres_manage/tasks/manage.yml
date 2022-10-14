@@ -1,0 +1,45 @@
+---
+- name: Check node type for detecting the master node (master = http code 200)
+  uri:
+    url: "http://{{ ansible_fqdn}}:8008/master"
+  register: is_master
+  ignore_errors: yes
+
+- name: Ensure PostgreSQL users are present
+  postgresql_user:
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    #priv: "{{ item.priv | default('*.*:ALL') }}"
+    state: "{{ item.state | default('present') }}"
+    login_host: "{{ pg_host }}"
+    login_user: "{{ pg_user }}"
+    login_password: "{{ pg_user_password }}"
+    db: postgres
+  with_items: "{{ postgres_users }}"
+  when: is_master.status == 200
+
+- name: Ensure PostgreSQL databases are present
+  postgresql_db:
+    name: "{{ item.name }}"
+    owner: "{{ item.owner }}"
+    state: "{{ item.state | default('present') }}"
+    encoding: "{{ item.encoding | default('UTF-8') }}"
+    lc_collate:  "{{ item.collate | default('en_US.UTF-8') }}"
+    lc_ctype: "{{ item.ctype | default('en_US.UTF-8') }}"
+    login_host: "{{ pg_host }}"
+    login_user: "{{ pg_user }}"
+    login_password: "{{ pg_user_password }}"
+  with_items: "{{ postgres_databases }}"
+  when: is_master.status == 200
+
+- name: Grant privileges on database for user
+  postgresql_privs:
+    db: "{{ item.db }}"
+    privs: "{{ item.privs | default('ALL') }}"
+    type: "{{ item.type | default('database') }}"
+    role: "{{ item.role }}"
+    login_host: "{{ pg_host }}"
+    login_user: "{{ pg_user }}"
+    login_password: "{{ pg_user_password }}"
+  with_items: "{{ postgres_privs }}"
+  when: is_master.status == 200

@@ -1,0 +1,33 @@
+#!/bin/bash
+{{ ansible_managed | comment}}
+
+strMysqlUser="{{ mysql_backup_user }}"
+strPassword="{{ mysql_backup_password }}"
+backupDest="{{ mysql_backup_path }}"
+
+#date du jour et de la date d'il y a 14 jours
+dateActuelle=$(date '+%Y%m%d')
+datePassee=$(date --date '14 days ago' '+%Y%m%d')
+
+# dossier sauvegarde du jour
+repTravailActuel="${backupDest}/${dateActuelle}"
+mkdir -p $repTravailActuel
+
+#Suppression de la sauvegarde d'il y a 7 jours
+echo "[$(date '+%F %X')] Suppression des dump du ${datePassee}"
+repTravailPasse="${backupDest}/${datePassee}"
+rm -Rf $repTravailPasse
+
+# list des DB, "tail -n +2" pour ne pas prendre en compte le titre "Databases" retourne par la commande mysql
+listDatabase=$(mysql --user=${strMysqlUser} --password=${strPassword} -e "SHOW DATABASES;" |  tail -n +2)
+
+#dump de chaque base dans un fichier
+for lineDatabase in $listDatabase
+do
+    echo "[$(date '+%F %X')] Debut du dump de la base ${lineDatabase} vers ${repTravailActuel}"
+    mysqldump --create-options -q -e --single-transaction --ignore-table=mysql.event --user="${strMysqlUser}" --password="${strPassword}" "${lineDatabase}" | gzip > "${repTravailActuel}/${lineDatabase}.sql.gz"
+    echo "[$(date '+%F %X')] Dump gz dans ${repTravailActuel}/${lineDatabase}.sql.gz"
+done
+
+echo "[$(date '+%F %X')] Fin de la sauvegarde"
+exit 0

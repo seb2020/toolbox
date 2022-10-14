@@ -1,0 +1,20 @@
+---
+- name: Check node type for detecting the master node (master = http code 200)
+  uri:
+    url: "http://{{ ansible_fqdn}}:8008/master"
+  register: is_master
+  ignore_errors: yes
+
+- name: Grant privileges for Zabbix monitoring
+  postgresql_privs:
+    db: "{{ item.db }}"
+    privs: "{{ item.privs | default('ALL') }}"
+    type: "{{ item.type | default('database') }}"
+    role: "{{ item.role }}"
+    objs: "{{ item.objs }}"
+    schema: "{{ item.schema }}"
+    login_host: "{{ pg_host }}"
+    login_user: "{{ pg_user }}"
+    login_password: "{{ pg_user_password }}"
+  with_items: "{{ postgres_privs_zabbix }}"
+  when: is_master.status == 200

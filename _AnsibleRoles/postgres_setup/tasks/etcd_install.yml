@@ -1,0 +1,76 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "etcd_install.yml"
+ 
+- name: Download etcd
+  get_url:
+    url: http://largefiles.rsvgnw.local/etcd/etcd-v{{ etcd_version }}-linux-amd64.tar.gz
+    dest: /tmp/etcd-v{{ etcd_version }}-linux-amd64.tar.gz
+    mode: 0755
+    owner: "{{ pg_lnx_user }}"
+    group: "{{ pg_lnx_group }}"
+ 
+- name: Check if etcd is available in {{ etcd_bin_path }}
+  stat:
+    path: "{{ etcd_bin_path }}/etcd"
+  register: etcd_copied_to_bin
+ 
+- name: Extract etcd
+  unarchive:
+    src: /tmp/etcd-v{{ etcd_version }}-linux-amd64.tar.gz
+    dest: /tmp
+    owner: "{{ pg_lnx_user }}"
+    group: "{{ pg_lnx_group }}"
+    remote_src: yes
+  when: etcd_copied_to_bin.stat.exists == false
+ 
+- name: Copy etcd to {{ etcd_bin_path }}
+  copy: 
+    src: "/tmp/etcd-v{{ etcd_version }}-linux-amd64/{{ item }}"
+    dest: "{{ etcd_bin_path }}"
+    remote_src: yes
+    mode: 0755
+  when: etcd_copied_to_bin.stat.exists == false
+  with_items:
+    - etcd
+    - etcdctl
+ 
+- name: Copy the etcd configuration file
+  template:
+    src: "{{ role_path }}/templates/etcd.conf.j2"
+    dest: /etc/etcd.conf
+    owner: "{{ pg_lnx_user }}"
+    group: "{{ pg_lnx_group }}"
+    mode: 0700
+ 
+- name: Create the required folder for etcd data
+  file:
+    path: /data/etcd
+    state: directory
+    mode: 0700
+    recurse: yes
+    owner: "{{ pg_lnx_user }}"
+    group: "{{ pg_lnx_group }}"
+
+- name: Copy the etcd systemd service file
+  template:
+    src: "{{ role_path }}/templates/etcd.service.j2"
+    dest: /etc/systemd/system/etcd.service
+    owner: root
+    group: root
+    mode: 0755
+  
+- name: force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+ 
+- name: Enable the systemd etcd service
+  systemd:
+    name: etcd
+    enabled: yes
+ 
+- name: Start the systemd etcd service
+  systemd:
+    name: etcd
+    state: started

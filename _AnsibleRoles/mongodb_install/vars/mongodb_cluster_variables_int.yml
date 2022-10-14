@@ -1,0 +1,21 @@
+---
+# General settings
+mongo_user: mongod
+mongo_group: mongod
+mongo_path_root: /data/mongo
+mongo_path_log: "{{ mongo_path_root }}/log"
+mongo_path_data: "{{ mongo_path_root }}/data"
+mongo_path_keys: "{{ mongo_path_root }}/data/keys"
+mongo_cluster_name: "clustermongo.contoso.lan"
+mongo_key_filename: mongo-key
+mongo_flag_filename: init.done
+
+# MongoDB connection settings
+mongo_port: "27017"
+
+# MongoDB admin user
+mongo_user_admin_login: mongoadmin
+
+# Logrotate
+mongodb_logrotate_max_size: 100M
+mongodb_logrotate_old_files: 7

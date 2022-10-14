@@ -1,0 +1,8 @@
+---
+- name: Copy logrotate configuration for postgres
+  template:
+    src: ../templates/logrotate_postgres.j2
+    dest: /etc/logrotate.d/postgres
+    mode: 0644
+    owner: root
+    group: root

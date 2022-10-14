@@ -1,0 +1,31 @@
+#!/bin/bash
+{{ ansible_managed | comment}}
+
+backupdir="{{ mongodb_backup_path }}"
+day=`date +"%d%m%Y_%H%M%S"`;
+mkdir -p $backupdir/$day;
+
+# Set DATABASE_NAMES to "ALL" to backup all databases.
+# or specify databases names separated with space to backup 
+# specific databases only.
+DATABASE_NAMES='ALL'
+
+AUTH_ENABLED=1 
+AUTH_PARAM=""
+ 
+if [ ${AUTH_ENABLED} -eq 1 ]; then
+ AUTH_PARAM=" --username={{ mongodb_backup_user }} --password={{ mongodb_backup_password }} --authenticationDatabase=admin "
+fi
+
+echo "MongoDB Backup for $HOSTNAME";
+
+if [ ${DATABASE_NAMES} = "ALL" ]; then
+ mongodump --host={{ mongodb_login_host }} --port={{ mongodb_login_port }} ${AUTH_PARAM} --oplog --out=${backupdir}/${day}/
+else
+ for DB_NAME in ${DATABASE_NAMES}
+ do
+ mongodump --host={{ mongodb_login_host }} --port={{ mongodb_login_port }} --db=${DB_NAME} ${AUTH_PARAM} --oplog --out=${backupdir}/${day}/
+ done
+fi
+
+exit 0;

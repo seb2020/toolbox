@@ -1,0 +1,17 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "logrotate.yml"
+
+- name: Create mysql_logrotate_old_dir
+  file:
+    path: "{{ mysql_logrotate_old_dir }}"
+    owner: mysql
+    group: mysql
+    mode: '770'
+    state: directory
+
+- name: Configure logrotate
+  template:
+    src: "../templates/logrotate.j2"
+    dest: "/etc/logrotate.d/mysql"

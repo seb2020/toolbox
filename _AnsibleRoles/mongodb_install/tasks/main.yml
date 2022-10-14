@@ -1,0 +1,14 @@
+---
+- { include_vars: "user_passwords_{{ env }}.yml" } # Load correct variables for env
+- { include_vars: "mongodb_cluster_variables_{{ env }}.yml" } # Load correct variables for env
+
+- { include: mongodb_install.yml, become: true}
+- { include: mongodb_folders.yml, become: true}
+- { include: mongodb_selinux.yml, become: true}
+
+- { include: mongodb_user_admin.yml, become: true}
+- { include: mongodb_replica.yml, become: true}
+
+- { include: mongodb_logrotate.yml, become: true }
+
+- { include: mongodb_bootstrap.yml, become: true}

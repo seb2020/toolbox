@@ -1,0 +1,16 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "patroni_boostrap.yml"
+
+- name: Create patroni bootstrap file
+  template:
+    src: "{{ role_path }}/templates/patroni.yml.j2"
+    dest: "/etc/patroni/patroni.yml"
+
+- name: Set right on patroni bootstrap file
+  file:
+    path: "{{ patroni_home }}/patroni.yml"
+    owner: "{{ pg_lnx_user }}"
+    group: "{{ pg_lnx_group }}"
+    mode: 0600

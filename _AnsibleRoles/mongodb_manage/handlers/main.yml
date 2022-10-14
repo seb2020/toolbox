@@ -1,0 +1,12 @@
+---
+# handlers file
+
+- name: restart zabbix-agent2
+  service:
+    name: zabbix-agent2
+    state: restarted
+
+- name: restart mongod
+  service:
+    name: mongod
+    state: restarted

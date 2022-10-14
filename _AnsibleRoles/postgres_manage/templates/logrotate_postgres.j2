@@ -1,0 +1,13 @@
+{{ ansible_managed | comment }}
+
+/data/postgres/pg_log/postgresql-*.log {
+       daily
+       size 100M
+       rotate 8
+       missingok
+       copytruncate
+       compress
+       nomail
+       notifempty
+       create 0660 postgres postgres
+}

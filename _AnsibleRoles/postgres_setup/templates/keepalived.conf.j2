@@ -1,0 +1,26 @@
+{{ ansible_managed | comment }}
+
+vrrp_script chk_haproxy {
+    script "killall -0 haproxy"
+    interval 2
+    weight 2
+}
+ 
+vrrp_instance {{ vrrp_instance_name }} {
+  state {{ vrrp_instance_state|upper }}
+  interface {{ vrrp_instance_interface }}
+  virtual_router_id {{ vrrp_instance_virtual_router_id }}
+  priority {{ vrrp_instance_priority }}
+  advert_int {{ vrrp_instance_advert_int }}
+
+  authentication {
+    auth_type {{ vrrp_instance_authentication_type|upper }}
+    auth_pass {{ vrrp_instance_authentication_pass }}
+  }
+  virtual_ipaddress {
+    {{ vrrp_ipaddress }}
+  }
+  track_script {
+    chk_haproxy
+  }
+}

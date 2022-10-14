@@ -1,0 +1,25 @@
+---
+- name: Install haproxy
+  yum:
+    name: haproxy
+    state: present
+
+- template:
+    src: "{{ role_path }}/templates/haproxy.cfg.j2"
+    dest: /etc/haproxy/haproxy.cfg
+    owner: "{{ pg_lnx_user }}"
+    group: "{{ pg_lnx_group }}"
+    mode: 0600
+ 
+- name: Set selinux context for ha proxy
+  seboolean:
+    name: haproxy_connect_any
+    state: yes
+    persistent: yes
+
+- name: Enable the systemd haproxy service
+  systemd:
+    name: haproxy
+    enabled: yes
+    state: restarted
+ 

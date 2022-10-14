@@ -1,0 +1,17 @@
+module mongodb_sysctl_net 1.0;
+require {
+        type unlabeled_t;
+        type mongod_t;
+        type sysctl_net_t;
+        class dir search;
+        class file getattr;
+        class file read;
+         class file open;
+}
+
+#============= mongod_t ==============
+allow mongod_t sysctl_net_t:dir search;
+allow mongod_t unlabeled_t:dir search;
+allow mongod_t sysctl_net_t:file getattr;
+allow mongod_t sysctl_net_t:file read;
+allow mongod_t sysctl_net_t:file open;

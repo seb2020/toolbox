@@ -1,0 +1,30 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "backup.yml"
+
+- name: Ensure backup path is created
+  file:
+    path: "{{ mysql_backup_path }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: 0775
+
+- name: Copy backup script
+  template:
+    src: ../templates/backup_mariadb.sh.j2
+    dest: /etc/cron.d/backup_mariadb.sh
+    mode: 0770
+    owner: root
+    group: root
+
+- name: Add backup script to crontab
+  cron:
+      name: "Backup MariaDB"
+      minute: "10"
+      hour: "4"
+      day: "*"
+      month: "*"
+      weekday: "*"
+      job: "/etc/cron.d/backup_mariadb.sh > /dev/null 2>&1"

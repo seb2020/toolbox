@@ -1,0 +1,24 @@
+{{ mysql_logdir }}/* {
+        su mysql mysql
+        missingok
+        create 660 mysql mysql
+        notifempty
+        daily
+        minsize {{ mysql_logrotate_min_size }}
+        maxsize {{ mysql_logrotate_max_size }}
+        rotate {{ mysql_logrotate_old_files }}
+        compress
+        delaycompress
+        sharedscripts
+        olddir {{ mysql_logrotate_old_dir }}
+        createolddir 770 mysql mysql
+    postrotate
+        # just if mariadbd is really running
+        if test -x /usr/bin/mysqladmin && \
+           /usr/bin/mysqladmin ping &>/dev/null
+        then
+           /usr/bin/mysqladmin --local flush-error-log \
+              flush-engine-log flush-general-log flush-slow-log
+        fi
+    endscript
+

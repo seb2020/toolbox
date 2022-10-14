@@ -1,0 +1,7 @@
+---
+- { include_vars: "mariadb_{{ env}}.yml" } # Load correct variables for env
+
+- { include: monitoring.yml, become: true, when:  "'mariadb106_servers' in group_names" } # change server group name
+- { include: conf_mariadb.yml, become: true, when:  "'mariadb106_servers' in group_names" } # change server group name
+- { include: backup.yml, become: true, when:  "'mariadb106_master_node' in group_names" } # change server group name
+- { include: manage.yml, become: true, when:  "'mariadb106_master_node' in group_names" } # change server group name

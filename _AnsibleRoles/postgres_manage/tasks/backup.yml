@@ -1,0 +1,33 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "backup.yml"
+
+- name: Ensure backup path is created
+  file:
+    path: "{{ pg_backup_path }}"
+    state: directory
+    owner: "{{ pg_lnx_user }}"
+    group: "{{ pg_lnx_group }}"
+    mode: 0775
+  when: ansible_hostname == backup_node
+
+- name: Copy backup script
+  template:
+    src: ../templates/backup_postgres.sh.j2
+    dest: /etc/cron.d/backup_postgres.sh
+    mode: 0770
+    owner: root
+    group: root
+  when: ansible_hostname == backup_node
+
+- name: Add backup script to crontab
+  cron:
+      name: "Backup postgres"
+      minute: "10"
+      hour: "4"
+      day: "*"
+      month: "*"
+      weekday: "*"
+      job: "/etc/cron.d/backup_postgres.sh > /dev/null 2>&1"
+  when: ansible_hostname == backup_node

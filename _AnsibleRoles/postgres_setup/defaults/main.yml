@@ -1,0 +1,55 @@
+---
+# etcd version and path
+etcd_version: 3.3.27
+etcd_bin_path: "/usr/bin"
+
+# Required directories
+patroni_data_dir: "/data/postgres"
+patroni_home: "/etc/patroni"
+patroni_log_dir: "/var/log/patroni/{{ pg_major_version }}"
+pg_bin_path: "/usr/pgsql-{{ pg_major_version }}/bin"
+patroni_bin_path: /usr/local/bin/patroni
+pg_pass: /var/lib/pgsql/{{ pg_major_version }}
+
+# ports
+pg_port: 5000 # internal postgres server port
+haproxy_bind_port: 5432 # haproxy port for external access
+haproxy_bind_port_admin: 7000 # haproxy port for monitoring endpoint
+etcd_port: 2379
+etcd_port2: 2380
+patroni_port: 8008
+
+# Required OS and python packages
+os_python_packages:
+   - net-tools
+   - firewalld
+   - gcc
+   - python3-devel
+
+# Packages to install for PostgreSQL
+pg_packages:
+  - postgresql{{ pg_major_version }}-server
+  - postgresql{{ pg_major_version }}-contrib
+  - postgresql{{ pg_major_version }}-libs
+  - postgresql{{ pg_major_version }}-devel
+
+# Required python packages for patroni
+patroni_python_packages:
+   - PyYAML
+   - urllib3>=1.19.1,!=1.21
+   - boto
+   - PyYAML
+   - six>=1.7
+   - kazoo>=1.3.1
+   - python-etcd>=0.4.3,<0.5
+   - click>=4.1
+   - prettytable>=0.7
+   - python-dateutil
+   - psutil>=2.0.0
+   - cdiff
+   - psycopg2-binary>=2.8.4
+
+# Packages to install for PostgreSQL
+patroni_packages:
+  - patroni
+  - patroni[etcd]

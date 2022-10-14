@@ -1,0 +1,30 @@
+{{ ansible_managed | comment }}
+
+global
+    maxconn 100
+ 
+defaults
+    log global
+    mode tcp
+    retries 2
+    timeout client 30m
+    timeout connect 4s
+    timeout server 30m
+    timeout check 5s
+ 
+listen stats
+    mode http
+    bind *:7000
+    stats enable
+    stats uri /
+    # stats auth haproxy:haproxy
+    # stats refresh 10s
+ 
+listen {{ pg_patroni_scope }}
+    bind *:{{ haproxy_bind_port }}
+    option httpchk
+    http-check expect status 200
+    default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
+    {% for h in ansible_play_hosts %}
+    server postgresql_{{ hostvars[h]['ansible_default_ipv4']['address'] }}_{{ pg_port }} {{ hostvars[h]['ansible_default_ipv4']['address'] }}:{{ pg_port }} maxconn 100 check port 8008
+    {% endfor %}

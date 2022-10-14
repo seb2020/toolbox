@@ -1,0 +1,9 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "mongodb_logrotate.yml"
+
+- name: Configure logrotate
+  template:
+    src: "{{ role_path }}/templates/logrotate_mongodb.j2"
+    dest: "/etc/logrotate.d/mongodb"

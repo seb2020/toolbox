@@ -1,0 +1,30 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "backup.yml"
+
+- name: Ensure backup path is created
+  file:
+    path: "{{ mongodb_backup_path }}"
+    state: directory
+    owner: mongod
+    group: mongod
+    mode: 0775
+
+- name: Copy backup script
+  template:
+    src: ../templates/backup_mongodb.sh.j2
+    dest: /etc/cron.d/backup_mongodb.sh
+    mode: 0770
+    owner: root
+    group: root
+
+- name: Add backup script to crontab
+  cron:
+      name: "Backup MongoDB"
+      minute: "20"
+      hour: "4"
+      day: "*"
+      month: "*"
+      weekday: "*"
+      job: "/etc/cron.d/backup_mongodb.sh > /dev/null 2>&1"

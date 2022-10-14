@@ -1,0 +1,13 @@
+---
+- name: Display running playbook
+  debug:
+    msg: "conf_mariadb.yml"
+
+- name: MariaDB configuration file
+  template:
+    src: ../templates/server.cnf.j2
+    dest: /etc/my.cnf.d/server.cnf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart mariadb
